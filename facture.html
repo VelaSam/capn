@@ -15,7 +15,6 @@
   <ul class="navbar-nav">
     <li><a href="dashboard-parent.html">🏠 Tableau de bord</a></li>
     <li><a href="competitions.html">🏆 Compétitions</a></li>
-    <li><a href="materiel.html">🛒 Matériel</a></li>
     <li><a href="facture.html" class="active">📄 Factures</a></li>
   </ul>
   <div class="navbar-user">
@@ -32,7 +31,7 @@
       <span>Factures</span>
     </div>
     <h1>📄 Mes factures</h1>
-    <p>Consultez et payez vos factures en ligne. Paiements sécurisés PCI DSS.</p>
+    <p>Consultez vos transactions et factures liées aux compétitions.</p>
   </div>
 </div>
 
@@ -113,78 +112,7 @@
   </div>
 </div>
 
-<!-- Modal: Paiement simulé -->
-<div class="modal-overlay" id="modal-paiement">
-  <div class="modal" style="max-width:520px;">
-    <div class="modal-header" style="background:var(--capn-teal); color:#fff; border-bottom:3px solid var(--gold);">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:1.2rem;">🔒</span>
-        <h3 style="color:#fff;">Paiement sécurisé – CU-09</h3>
-      </div>
-      <button class="modal-close" style="color:rgba(255,255,255,.7);" onclick="closePaiement()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="alert alert-info mb-20" style="font-size:.8rem;">
-        <span class="alert-icon">🔒</span>
-        <div>Paiement traité par <strong>Stripe</strong> — conforme PCI DSS. Vos informations de carte ne sont jamais stockées sur nos serveurs.</div>
-      </div>
 
-      <div id="paiement-resume" style="background:var(--bg-light); border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:.875rem;"></div>
-
-      <div style="display:flex; flex-direction:column; gap:14px;">
-        <div class="form-group">
-          <label class="form-label">Titulaire de la carte</label>
-          <input type="text" class="form-control" value="Marie Tremblay" placeholder="Nom sur la carte" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Numéro de carte</label>
-          <div style="position:relative;">
-            <input type="text" class="form-control" value="4242 4242 4242 4242" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" />
-            <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:1.2rem;">💳</span>
-          </div>
-          <span class="form-hint">Carte test Visa · Prototype uniquement</span>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Expiration</label>
-            <input type="text" class="form-control" value="12/28" placeholder="MM/AA" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">CVV</label>
-            <input type="text" class="form-control" value="123" placeholder="3 chiffres" maxlength="4" />
-          </div>
-        </div>
-      </div>
-
-      <!-- CU-09 flux alt. 5a.1 – Paiement refusé (simulation) -->
-      <div id="paiement-refuse-msg" class="alert alert-danger hidden mt-8">
-        <span class="alert-icon">❌</span>
-        <div>Paiement refusé par le fournisseur. La facture reste <strong>à payer</strong>. Veuillez vérifier vos informations et réessayer.</div>
-      </div>
-    </div>
-    <div class="modal-footer" style="flex-wrap:wrap; gap:8px;">
-      <button class="btn btn-ghost" onclick="closePaiement()">Annuler</button>
-      <button class="btn btn-ghost btn-sm" style="font-size:.74rem; color:var(--danger); border-color:var(--danger);" onclick="simulerRefus()">Simuler refus (CU-09 5a.1)</button>
-      <button class="btn btn-gold btn-lg" id="btn-payer-confirmer" onclick="confirmerPaiement()">
-        🔒 Payer <span id="paiement-montant-btn"></span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Reçu -->
-<div class="modal-overlay" id="modal-recu">
-  <div class="modal" style="max-width:400px;">
-    <div class="modal-header">
-      <h3>✅ Paiement reçu!</h3>
-      <button class="modal-close" onclick="closeRecu(); location.reload();">✕</button>
-    </div>
-    <div class="modal-body" id="recu-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-primary btn-full" onclick="closeRecu(); location.reload();">Fermer</button>
-    </div>
-  </div>
-</div>
 
 <div class="toast-container" id="toast-container"></div>
 
@@ -226,7 +154,6 @@ function renderFactures(list) {
       <td>
         <div style="display:flex; gap:6px;">
           <button class="btn btn-ghost btn-sm" onclick="voirFacture('${f.id}')">Voir</button>
-          ${f.statut === 'impayée' ? `<button class="btn btn-gold btn-sm" onclick="ouvrirPaiement('${f.id}')">Payer</button>` : ''}
         </div>
       </td>
     </tr>`).join('');
@@ -276,56 +203,13 @@ function voirFacture(id) {
         <span style="color:var(--capn-teal);">${formatMoney(f.total)}</span>
       </div>
       ${f.statut === 'impayée' ? `
-        <button class="btn btn-gold btn-full mt-8" onclick="ouvrirPaiement('${f.id}')">💳 Payer maintenant →</button>` 
+        <div class="alert alert-info mt-8"><span class="alert-icon">⏳</span><div style="font-size:.8rem;">À payer avant l'échéance.</div></div>` 
         : `<div class="alert alert-success mt-8"><span class="alert-icon">✅</span><div style="font-size:.8rem;">Cette facture a été payée.</div></div>`}
     </div>`;
   document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function ouvrirPaiement(id) {
-  const f = allFactures.find(f => f.id === id);
-  currentFacture = f;
-  document.getElementById('paiement-montant-btn').textContent = formatMoney(f.total);
-  document.getElementById('paiement-resume').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span class="text-muted">Facture</span><code>${f.id}</code></div>
-    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span class="text-muted">Description</span><span>${f.type} – ${f.nageur}</span></div>
-    <div style="display:flex; justify-content:space-between;"><span class="text-muted">Montant</span><strong style="font-size:1.1rem; color:var(--capn-teal);">${formatMoney(f.total)}</strong></div>`;
-  document.getElementById('modal-paiement').classList.add('open');
-}
 
-async function confirmerPaiement() {
-  if (!currentFacture) return;
-  document.getElementById('paiement-refuse-msg').classList.add('hidden');
-  const btn = document.getElementById('btn-payer-confirmer');
-  setLoading(btn, true);
-  const res = await API.payer(currentFacture.id);
-  setLoading(btn, false);
-  closePaiement();
-
-  const recu = document.getElementById('recu-body');
-  recu.innerHTML = `
-    <div class="alert alert-success mb-16"><span class="alert-icon">✅</span><div>Paiement accepté! Votre reçu a été envoyé par courriel (CU-12 – notification automatique).</div></div>
-    <div style="background:var(--bg-light); border-radius:var(--radius); padding:14px; font-size:.875rem; display:flex; flex-direction:column; gap:8px; border:1px solid var(--border);">
-      <div class="flex justify-between"><span class="text-muted">Facture</span><code>${currentFacture.id}</code></div>
-      <div class="flex justify-between"><span class="text-muted">Montant payé</span><strong>${formatMoney(currentFacture.total)}</strong></div>
-      <div class="flex justify-between"><span class="text-muted">Reçu</span><code style="color:var(--success);">${res.recu}</code></div>
-      <div class="flex justify-between"><span class="text-muted">Date</span><span>${formatDate(new Date().toISOString().slice(0,10))}</span></div>
-    </div>`;
-  document.getElementById('modal-recu').classList.add('open');
-}
-
-async function simulerRefus() {
-  // CU-09 flux alt. 5a.1 – Paiement refusé par le fournisseur
-  const btn = document.getElementById('btn-payer-confirmer');
-  setLoading(btn, true);
-  await API.delay(1000);
-  setLoading(btn, false);
-  document.getElementById('paiement-refuse-msg').classList.remove('hidden');
-  showToast('Paiement refusé — la facture reste à payer.', 'error');
-}
-
-function closePaiement() { document.getElementById('modal-paiement').classList.remove('open'); }
-function closeRecu()     { document.getElementById('modal-recu').classList.remove('open'); }
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });

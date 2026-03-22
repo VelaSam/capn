@@ -87,17 +87,7 @@ const EPREUVES = [
   { id: 'ep10', nom: '200m QNI',      categorie: 'Quatre nages', distance: 200, sexe: 'F/M' }
 ];
 
-// ── Matériel ──────────────────────────────────────────────────
-const MATERIEL = [
-  { id: 'm01', nom: 'Planche de natation', categorie: 'Entraînement', prix: 18.50, emoji: '🏊',  desc: 'Planche en mousse haute densité, couleur CAPN', stock: 10 },
-  { id: 'm02', nom: 'Pull Buoy', categorie: 'Entraînement', prix: 16.00, emoji: '🔵', desc: 'Pull buoy ergonomique pour isoler les bras', stock: 15 },
-  { id: 'm03', nom: 'Palmes courtes', categorie: 'Entraînement', prix: 42.00, emoji: '🦶', desc: 'Palmes de sprint, différentes pointures disponibles', stock: 8 },
-  { id: 'm04', nom: 'Casque CAPN', categorie: 'Club', prix: 28.00, emoji: '🧢', desc: 'Casque de silicone aux couleurs du CAPN (marine et or)', stock: 20 },
-  { id: 'm05', nom: 'Tuque CAPN', categorie: 'Club', prix: 22.00, emoji: '🎿', desc: 'Tuque brodée logo Piranhas', stock: 12 },
-  { id: 'm06', nom: 'Hoodie CAPN', categorie: 'Club', prix: 65.00, emoji: '👕', desc: 'Chandail à capuche unisexe avec logo Piranhas', stock: 6 },
-  { id: 'm07', nom: 'Lunettes de compétition', categorie: 'Entraînement', prix: 34.00, emoji: '🥽', desc: 'Lunettes Speedo Fastskin Elite, teintées', stock: 5 },
-  { id: 'm08', nom: 'Sac de piscine CAPN', categorie: 'Club', prix: 48.00, emoji: '🎒', desc: 'Grand sac imperméable aux couleurs du club', stock: 4 }
-];
+
 
 // ── Factures ──────────────────────────────────────────────────
 const FACTURES = [
@@ -115,32 +105,17 @@ const FACTURES = [
     total: 45.00
   },
   {
-    id: 'FAC-2026-002',
-    date: '2026-02-15',
-    echeance: '2026-03-01',
-    nageur: 'Thomas Tremblay',
-    statut: 'payée',
-    type: 'Matériel',
-    description: 'Commande matériel – février 2026',
-    lignes: [
-      { desc: 'Casque CAPN', qte: 1, prix: 28.00 },
-      { desc: 'Pull Buoy',   qte: 1, prix: 16.00 }
-    ],
-    total: 44.00
-  },
-  {
     id: 'FAC-2026-003',
     date: '2026-03-10',
     echeance: '2026-04-10',
-    nageur: 'Léa Tremblay',
+    nageur: 'Thomas Tremblay',
     statut: 'impayée',
-    type: 'Matériel',
-    description: 'Commande matériel – mars 2026',
+    type: 'Compétition',
+    description: 'Frais de transport – Championnat Provincial Gatineau',
     lignes: [
-      { desc: 'Hoodie CAPN', qte: 1, prix: 65.00 },
-      { desc: 'Lunettes de compétition', qte: 1, prix: 34.00 }
+      { desc: 'Transport autobus CAPN', qte: 1, prix: 100.00 }
     ],
-    total: 99.00
+    total: 100.00
   }
 ];
 
@@ -194,27 +169,7 @@ const API = {
     return { success: true };
   },
 
-  async getMateriel() {
-    await this.delay(400);
-    return MATERIEL;
-  },
 
-  async commander(panierItems) {
-    await this.delay(1000);
-    const factureId = 'FAC-2026-' + String(FACTURES.length + 1).padStart(3, '0');
-    const total = panierItems.reduce((s, i) => s + i.prix * i.qte, 0);
-    const f = {
-      id: factureId,
-      date: new Date().toISOString().slice(0, 10),
-      echeance: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-      statut: 'impayée',
-      type: 'Matériel',
-      lignes: panierItems.map(i => ({ desc: i.nom, qte: i.qte, prix: i.prix })),
-      total
-    };
-    FACTURES.push(f);
-    return { success: true, facture: f };
-  },
 
   async getFactures() {
     await this.delay(500);
