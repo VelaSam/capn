@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPN – Compétitions</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="dashboard-parent.html" class="navbar-brand">
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+  </a>
+  <ul class="navbar-nav">
+    <li><a href="dashboard-parent.html">🏠 Tableau de bord</a></li>
+    <li><a href="competitions.html" class="active">🏆 Compétitions</a></li>
+    <li><a href="materiel.html">🛒 Matériel</a></li>
+    <li><a href="facture.html">📄 Factures</a></li>
+  </ul>
+  <div class="navbar-user">
+    <span class="text-sm">Marie Tremblay</span>
+    <div class="avatar">MT</div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="dashboard-parent.html">Tableau de bord</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Compétitions</span>
+    </div>
+    <h1>🏆 Compétitions</h1>
+    <p>Inscrivez vos nageurs aux compétitions disponibles.</p>
+  </div>
+</div>
+
+<div class="container section">
+  <!-- Filtres -->
+  <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+    <button class="btn btn-navy btn-sm active-filter" onclick="filterComps('tout')" id="f-tout">Toutes</button>
+    <button class="btn btn-ghost btn-sm" onclick="filterComps('ouvert')" id="f-ouvert">Ouvertes</button>
+    <button class="btn btn-ghost btn-sm" onclick="filterComps('fermé')" id="f-ferme">Fermées</button>
+    <div style="margin-left:auto; font-size:.82rem; color:var(--text-light);" id="filter-label">3 compétitions</div>
+  </div>
+
+  <div class="grid-3" id="competitions-grid">
+    <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-light);">Chargement…</div>
+  </div>
+</div>
+
+<!-- Modal: Inscription à une compétition -->
+<div class="modal-overlay" id="modal-inscription">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>S'inscrire à la compétition</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Rempli dynamiquement -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" id="btn-confirmer" onclick="confirmerInscription()">Confirmer l'inscription</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirmation -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-header">
+      <h3>✅ Inscription confirmée</h3>
+      <button class="modal-close" onclick="closeModal2()">✕</button>
+    </div>
+    <div class="modal-body" id="confirm-body"></div>
+    <div class="modal-footer">
+      <a href="epreuves.html" class="btn btn-primary" id="btn-epreuves-link">Choisir les épreuves →</a>
+      <button class="btn btn-ghost" onclick="closeModal2(); location.reload();">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="mock-data.js"></script>
+<script>
+let allComps = [];
+let selectedNageur = null;
+let selectedComp = null;
+
+async function loadComps() {
+  allComps = await API.getCompetitions();
+  renderComps(allComps);
+}
+
+function renderComps(list) {
+  document.getElementById('filter-label').textContent = list.length + ' compétition' + (list.length > 1 ? 's' : '');
+  const grid = document.getElementById('competitions-grid');
+  if (!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-light);">Aucune compétition trouvée.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(c => {
+    const isOpen = c.statut === 'ouvert';
+    const leaOk  = c.inscription_nageur['n001'] === 'inscrit';
+    const thomOk = c.inscription_nageur['n002'] === 'inscrit';
+
+    return `
+    <div class="comp-card ${c.niveau === 'Provincial' ? 'gold-accent' : ''}">
+      <div class="comp-card-accent"></div>
+      <div class="comp-card-body">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px;">
+          <span class="badge ${isOpen ? 'badge-open' : 'badge-closed'}">${isOpen ? '● Ouvert' : '● Fermé'}</span>
+          <span class="badge badge-info">${c.niveau}</span>
+        </div>
+        <div class="comp-date">${formatDate(c.date_debut)}${c.date_fin !== c.date_debut ? ' – ' + formatDate(c.date_fin) : ''}</div>
+        <div class="comp-title">${c.nom}</div>
+        <div class="comp-location">📍 ${c.lieu}</div>
+        <p class="text-sm text-muted mt-8" style="line-height:1.5;">${c.description}</p>
+        <div class="comp-meta">
+          <div class="comp-meta-item">📅 Échéance: ${formatDate(c.echeance_inscription)}</div>
+          <div class="comp-meta-item">💰 ${formatMoney(c.cout)}/nageur</div>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          ${leaOk  ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">✓ Léa inscrite</span>' : ''}
+          ${thomOk ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">✓ Thomas inscrit</span>' : ''}
+        </div>
+      </div>
+      <div class="comp-card-footer">
+        <div style="font-size:.78rem; color:var(--text-light);">Groupes: ${c.groupes_eligible.join(', ')}</div>
+        ${isOpen
+          ? `<button class="btn btn-primary btn-sm" onclick="openInscription('${c.id}')">S'inscrire →</button>`
+          : `<button class="btn btn-ghost btn-sm" disabled>Fermé</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterComps(type) {
+  ['tout','ouvert','ferme'].forEach(k => {
+    const b = document.getElementById('f-' + k);
+    b.className = 'btn btn-sm ' + (k === type ? 'btn-navy' : 'btn-ghost');
+  });
+  const filtered = type === 'tout' ? allComps : allComps.filter(c => c.statut === type);
+  renderComps(filtered);
+}
+
+function openInscription(compId) {
+  selectedComp = allComps.find(c => c.id === compId);
+  if (!selectedComp) return;
+  const body = document.getElementById('modal-body');
+  const nageurs = CURRENT_USER.enfants.filter(n => selectedComp.groupes_eligible.includes(n.groupe));
+
+  body.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="alert alert-info">
+        <span class="alert-icon">📅</span>
+        <div>
+          <strong>${selectedComp.nom}</strong><br/>
+          ${formatDate(selectedComp.date_debut)} · ${selectedComp.lieu}<br/>
+          <strong>Échéance d'inscription : ${formatDate(selectedComp.echeance_inscription)}</strong>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Sélectionner le(s) nageur(s) <span class="required">*</span></label>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="nageur-checkboxes">
+          ${nageurs.length === 0
+            ? '<div class="alert alert-warning"><span class="alert-icon">⚠️</span><div>Aucun de vos nageurs n\'est éligible à cette compétition (groupe requis: ' + selectedComp.groupes_eligible.join(', ') + ').</div></div>'
+            : nageurs.map(n => {
+                const dejaInscrit = selectedComp.inscription_nageur[n.id] === 'inscrit';
+                return `
+                  <label class="check-group ${dejaInscrit ? 'selected' : ''}" style="${dejaInscrit ? 'opacity:.7;pointer-events:none;' : ''}">
+                    <input type="checkbox" value="${n.id}" ${dejaInscrit ? 'checked disabled' : ''} onchange="updateNageurSelection(this)"/>
+                    <div>
+                      <div style="font-weight:600;">${n.prenom} ${n.nom}</div>
+                      <div class="text-xs text-muted">${n.age} ans · ${n.groupe} ${dejaInscrit ? '· <span style="color:var(--success)">✓ Déjà inscrit(e)</span>' : ''}</div>
+                    </div>
+                    <div style="margin-left:auto; font-weight:700; color:var(--capn-teal);">${formatMoney(selectedComp.cout)}</div>
+                  </label>`;
+              }).join('')
+          }
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <span class="alert-icon">💳</span>
+        <div>Une facture sera générée et envoyée à votre courriel. Le paiement devra être effectué avant l'échéance.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('modal-inscription').classList.add('open');
+}
+
+function updateNageurSelection(cb) {
+  const label = cb.closest('.check-group');
+  label.classList.toggle('selected', cb.checked);
+}
+
+async function confirmerInscription() {
+  const checked = [...document.querySelectorAll('#nageur-checkboxes input:checked:not(:disabled)')];
+  if (!checked.length) { showToast('Veuillez sélectionner au moins un nageur.', 'error'); return; }
+  const btn = document.getElementById('btn-confirmer');
+  setLoading(btn, true);
+  const results = [];
+  for (const cb of checked) {
+    const r = await API.inscrireCompetition(selectedComp.id, cb.value);
+    const nageur = CURRENT_USER.enfants.find(n => n.id === cb.value);
+    results.push({ nageur, confirmation: r.confirmationId });
+  }
+  setLoading(btn, false);
+  document.getElementById('modal-inscription').classList.remove('open');
+
+  const body = document.getElementById('confirm-body');
+  body.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="text-align:center; font-size:2.5rem; margin-bottom:4px;">🎉</div>
+      <p class="text-sm">Votre inscription à <strong>${selectedComp.nom}</strong> est bien enregistrée !</p>
+      ${results.map(r => `
+        <div style="background:var(--success-bg); padding:10px 14px; border-radius:8px; font-size:.85rem;">
+          <strong>${r.nageur.prenom} ${r.nageur.nom}</strong><br/>
+          Confirmation : <code>${r.confirmation}</code>
+        </div>`).join('')}
+      <div class="alert alert-info mt-8">
+        <span class="alert-icon">📧</span>
+        <div>Une confirmation a été envoyée par courriel. Votre nageur devra maintenant choisir ses épreuves.</div>
+      </div>
+    </div>`;
+  document.getElementById('modal-confirm').classList.add('open');
+}
+
+function closeModal()  { document.getElementById('modal-inscription').classList.remove('open'); }
+function closeModal2() { document.getElementById('modal-confirm').classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+loadComps();
+</script>
+</body>
+</html>

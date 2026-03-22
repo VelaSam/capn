@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPN – Tableau de bord</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="dashboard-parent.html" class="navbar-brand">
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.style.fontSize='1.5rem'; this.alt='🐟';" />
+  </a>
+  <ul class="navbar-nav">
+    <li><a href="dashboard-parent.html" class="active">🏠 Tableau de bord</a></li>
+    <li><a href="competitions.html">🏊 Compétitions</a></li>
+    <li><a href="materiel.html">🛒 Matériel</a></li>
+    <li><a href="facture.html">📄 Factures</a></li>
+  </ul>
+  <div class="navbar-user">
+    <span class="text-sm">Marie Tremblay</span>
+    <div class="avatar">MT</div>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <div class="flex align-center justify-between">
+      <div>
+        <h1>Bonjour, Marie! 👋</h1>
+        <p>Voici un aperçu de la saison compétitive 2025-2026 de votre famille.</p>
+      </div>
+      <div style="border:1px solid rgba(255,255,255,.3); border-radius:var(--radius); padding:10px 16px; color:#fff; text-align:center; font-size:.8rem;">
+        <div style="font-size:1.3rem; font-weight:700; color:var(--gold);">2025–26</div>
+        <div style="opacity:.75;">Saison active</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="container" style="padding-top:28px; padding-bottom:8px;">
+  <div class="grid-4">
+    <div class="stat-card">
+      <div class="stat-icon navy">🏊</div>
+      <div>
+        <div class="stat-label">Nageurs</div>
+        <div class="stat-value">2</div>
+        <div class="stat-sub">Léa &amp; Thomas</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon aqua">🏆</div>
+      <div>
+        <div class="stat-label">Compétitions inscrites</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Cette saison</div>
+      </div>
+    </div>
+    <div class="stat-card" style="cursor:pointer;" onclick="window.location='facture.html'">
+      <div class="stat-icon gold">💰</div>
+      <div>
+        <div class="stat-label">Factures en attente</div>
+        <div class="stat-value" style="color:var(--warning);">2</div>
+        <div class="stat-sub">144,00 $ à payer</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">📦</div>
+      <div>
+        <div class="stat-label">Commandes actives</div>
+        <div class="stat-value">1</div>
+        <div class="stat-sub">En traitement</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container section">
+  <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start;">
+
+    <!-- Colonne principale -->
+    <div style="display:flex; flex-direction:column; gap:24px;">
+
+      <!-- Compétitions prochaines -->
+      <div class="card">
+        <div class="card-header">
+          <span>🏆 Prochaines compétitions</span>
+          <a href="competitions.html" class="btn btn-outline btn-sm">Voir tout →</a>
+        </div>
+        <div id="comp-list" class="card-body" style="padding:0;">
+          <div style="padding:20px; text-align:center; color:var(--text-light);">Chargement…</div>
+        </div>
+      </div>
+
+      <!-- Nageurs -->
+      <div class="card">
+        <div class="card-header">
+          <span>👨‍👧 Nageurs de la famille</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div style="padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="avatar" style="background:var(--aqua); color:#fff; width:42px; height:42px; font-size:1rem;">LT</div>
+              <div>
+                <div style="font-weight:700;">Léa Tremblay</div>
+                <div class="text-sm text-muted">14 ans · Groupe Développement</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <span class="badge badge-open">Inscrite</span>
+              <a href="epreuves.html" class="btn btn-outline btn-sm">Épreuves →</a>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="avatar" style="background:var(--capn-teal); color:#fff; width:42px; height:42px; font-size:1rem;">TT</div>
+              <div>
+                <div style="font-weight:700;">Thomas Tremblay</div>
+                <div class="text-sm text-muted">11 ans · Groupe Recrues 2</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <span class="badge badge-open">Inscrit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Colonne latérale -->
+    <div style="display:flex; flex-direction:column; gap:20px; position:sticky; top:80px;">
+
+      <!-- Actions rapides -->
+      <div class="card">
+        <div class="card-header"><span>⚡ Actions rapides</span></div>
+        <div class="card-body" style="display:flex; flex-direction:column; gap:10px;">
+          <a href="competitions.html" class="btn btn-primary btn-full">🏊 S'inscrire à une compétition</a>
+          <a href="materiel.html" class="btn btn-navy btn-full">🛒 Commander du matériel</a>
+          <a href="facture.html" class="btn btn-gold btn-full">💳 Payer une facture</a>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="card">
+        <div class="card-header"><span>🔔 Notifications récentes</span></div>
+        <div style="display:flex; flex-direction:column;">
+          <div style="padding:12px 18px; border-bottom:1px solid var(--border); font-size:.84rem;">
+            <div style="font-weight:600; color:var(--warning);">⚠️ Facture en attente</div>
+            <div class="text-muted text-xs mt-4">FAC-2026-001 · 45,00 $ · Échéance: 31 mars</div>
+          </div>
+          <div style="padding:12px 18px; border-bottom:1px solid var(--border); font-size:.84rem;">
+            <div style="font-weight:600; color:var(--aqua);">📅 Inscription ouverte</div>
+            <div class="text-muted text-xs mt-4">Championnat Provincial – Échéance: 2 mai</div>
+          </div>
+          <div style="padding:12px 18px; border-bottom:1px solid var(--border); font-size:.84rem;">
+            <div style="font-weight:600; color:var(--warning);">⚠️ Facture en attente</div>
+            <div class="text-muted text-xs mt-4">FAC-2026-003 · 99,00 $ · Échéance: 10 avril</div>
+          </div>
+          <div style="padding:12px 18px; font-size:.84rem;">
+            <div style="font-weight:600; color:var(--success);">✅ Commande reçue</div>
+            <div class="text-muted text-xs mt-4">Casque CAPN · Thomas Tremblay</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="mock-data.js"></script>
+<script>
+async function loadCompetitions() {
+  const comps = await API.getCompetitions();
+  const el = document.getElementById('comp-list');
+  const upcoming = comps.filter(c => c.statut === 'ouvert');
+  if (!upcoming.length) { el.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-light);">Aucune compétition ouverte actuellement.</div>'; return; }
+  el.innerHTML = upcoming.map(c => {
+    const leaStatus = c.inscription_nageur['n001'];
+    const thomasStatus = c.inscription_nageur['n002'];
+    return `
+      <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div>
+          <div class="comp-date">${formatDate(c.date_debut)}</div>
+          <div style="font-weight:700; font-size:.95rem;">${c.nom}</div>
+          <div class="text-sm text-muted">📍 ${c.lieu.split(',')[0]}</div>
+          <div style="display:flex; gap:6px; margin-top:6px;">
+            <span style="font-size:.75rem; background:var(--bg-light); padding:2px 8px; border-radius:6px;">
+              Léa: ${leaStatus ? '✅ inscrite' : '⬜ non inscrite'}
+            </span>
+            <span style="font-size:.75rem; background:var(--bg-light); padding:2px 8px; border-radius:6px;">
+              Thomas: ${thomasStatus ? '✅ inscrit' : '⬜ non inscrit'}
+            </span>
+          </div>
+        </div>
+        <div style="text-align:right; flex-shrink:0;">
+          <div style="font-weight:800; font-size:1rem; color:var(--capn-teal);">${formatMoney(c.cout)}</div>
+          <span class="badge badge-open mt-4">Ouvert</span><br/>
+          <a href="competitions.html" class="btn btn-outline btn-sm" style="margin-top:8px;">Gérer →</a>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+loadCompetitions();
+</script>
+</body>
+</html>

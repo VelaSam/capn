@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPN – Factures</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="dashboard-parent.html" class="navbar-brand">
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+  </a>
+  <ul class="navbar-nav">
+    <li><a href="dashboard-parent.html">🏠 Tableau de bord</a></li>
+    <li><a href="competitions.html">🏆 Compétitions</a></li>
+    <li><a href="materiel.html">🛒 Matériel</a></li>
+    <li><a href="facture.html" class="active">📄 Factures</a></li>
+  </ul>
+  <div class="navbar-user">
+    <span class="text-sm">Marie Tremblay</span>
+    <div class="avatar">MT</div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="dashboard-parent.html">Tableau de bord</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Factures</span>
+    </div>
+    <h1>📄 Mes factures</h1>
+    <p>Consultez et payez vos factures en ligne. Paiements sécurisés PCI DSS.</p>
+  </div>
+</div>
+
+<div class="container section">
+  <div style="display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start;">
+
+    <!-- Liste des factures -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- Résumé -->
+      <div class="grid-3" id="facture-stats">
+        <div class="stat-card">
+          <div class="stat-icon gold">⏳</div>
+          <div>
+            <div class="stat-label">À payer</div>
+            <div class="stat-value" id="stat-unpaid">…</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">✅</div>
+          <div>
+            <div class="stat-label">Payées</div>
+            <div class="stat-value" id="stat-paid">…</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon aqua">💰</div>
+          <div>
+            <div class="stat-label">Total en attente</div>
+            <div class="stat-value" id="stat-total">…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtres -->
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-navy btn-sm" onclick="filterFact('tout')" id="ff-tout">Toutes</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterFact('impayée')" id="ff-imp">À payer</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterFact('payée')" id="ff-pay">Payées</button>
+      </div>
+
+      <!-- Table des factures -->
+      <div class="card">
+        <div class="table-wrap">
+          <table class="capn-table" id="facture-table">
+            <thead>
+              <tr>
+                <th>Facture</th>
+                <th>Nageur</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Échéance</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="facture-tbody">
+              <tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">Chargement…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Détail facture (sidebar) -->
+    <div style="position:sticky; top:80px;" id="detail-panel">
+      <div class="card">
+        <div class="card-header"><span>📋 Détail de la facture</span></div>
+        <div class="card-body" id="detail-content">
+          <div style="text-align:center; padding:20px; color:var(--text-light); font-size:.875rem;">
+            Cliquez sur « Voir » pour afficher le détail d'une facture.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Paiement simulé -->
+<div class="modal-overlay" id="modal-paiement">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header" style="background:var(--capn-teal); color:#fff; border-bottom:3px solid var(--gold);">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:1.2rem;">🔒</span>
+        <h3 style="color:#fff;">Paiement sécurisé – CU-09</h3>
+      </div>
+      <button class="modal-close" style="color:rgba(255,255,255,.7);" onclick="closePaiement()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info mb-20" style="font-size:.8rem;">
+        <span class="alert-icon">🔒</span>
+        <div>Paiement traité par <strong>Stripe</strong> — conforme PCI DSS. Vos informations de carte ne sont jamais stockées sur nos serveurs.</div>
+      </div>
+
+      <div id="paiement-resume" style="background:var(--bg-light); border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:.875rem;"></div>
+
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="form-group">
+          <label class="form-label">Titulaire de la carte</label>
+          <input type="text" class="form-control" value="Marie Tremblay" placeholder="Nom sur la carte" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Numéro de carte</label>
+          <div style="position:relative;">
+            <input type="text" class="form-control" value="4242 4242 4242 4242" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" />
+            <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:1.2rem;">💳</span>
+          </div>
+          <span class="form-hint">Carte test Visa · Prototype uniquement</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Expiration</label>
+            <input type="text" class="form-control" value="12/28" placeholder="MM/AA" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input type="text" class="form-control" value="123" placeholder="3 chiffres" maxlength="4" />
+          </div>
+        </div>
+      </div>
+
+      <!-- CU-09 flux alt. 5a.1 – Paiement refusé (simulation) -->
+      <div id="paiement-refuse-msg" class="alert alert-danger hidden mt-8">
+        <span class="alert-icon">❌</span>
+        <div>Paiement refusé par le fournisseur. La facture reste <strong>à payer</strong>. Veuillez vérifier vos informations et réessayer.</div>
+      </div>
+    </div>
+    <div class="modal-footer" style="flex-wrap:wrap; gap:8px;">
+      <button class="btn btn-ghost" onclick="closePaiement()">Annuler</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.74rem; color:var(--danger); border-color:var(--danger);" onclick="simulerRefus()">Simuler refus (CU-09 5a.1)</button>
+      <button class="btn btn-gold btn-lg" id="btn-payer-confirmer" onclick="confirmerPaiement()">
+        🔒 Payer <span id="paiement-montant-btn"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Reçu -->
+<div class="modal-overlay" id="modal-recu">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h3>✅ Paiement reçu!</h3>
+      <button class="modal-close" onclick="closeRecu(); location.reload();">✕</button>
+    </div>
+    <div class="modal-body" id="recu-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-full" onclick="closeRecu(); location.reload();">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="mock-data.js"></script>
+<script>
+let allFactures = [];
+let currentFacture = null;
+
+async function loadFactures() {
+  allFactures = await API.getFactures();
+  updateStats(allFactures);
+  renderFactures(allFactures);
+}
+
+function updateStats(list) {
+  const unpaid = list.filter(f => f.statut === 'impayée');
+  const paid   = list.filter(f => f.statut === 'payée');
+  const total  = unpaid.reduce((s, f) => s + f.total, 0);
+  document.getElementById('stat-unpaid').textContent = unpaid.length;
+  document.getElementById('stat-paid').textContent   = paid.length;
+  document.getElementById('stat-total').textContent  = formatMoney(total);
+}
+
+function renderFactures(list) {
+  const tbody = document.getElementById('facture-tbody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">Aucune facture.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(f => `
+    <tr>
+      <td style="font-weight:700; font-family:monospace; font-size:.85rem; color:var(--capn-teal);">${f.id}</td>
+      <td>${f.nageur || '—'}</td>
+      <td><span class="badge badge-info" style="font-size:.7rem;">${f.type}</span></td>
+      <td>${formatDate(f.date)}</td>
+      <td style="${f.statut === 'impayée' && new Date(f.echeance) < new Date(Date.now() + 7*86400000) ? 'color:var(--danger); font-weight:600;' : ''}">${formatDate(f.echeance)}</td>
+      <td style="font-weight:700;">${formatMoney(f.total)}</td>
+      <td><span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? '✓ Payée' : '⏳ À payer'}</span></td>
+      <td>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="voirFacture('${f.id}')">Voir</button>
+          ${f.statut === 'impayée' ? `<button class="btn btn-gold btn-sm" onclick="ouvrirPaiement('${f.id}')">Payer</button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function filterFact(type) {
+  ['tout','imp','pay'].forEach((k, i) => {
+    const el = document.getElementById('ff-' + k);
+    el.className = 'btn btn-sm ' + ((['tout','impayée','payée'][i]) === type ? 'btn-navy' : 'btn-ghost');
+  });
+  const filtered = type === 'tout' ? allFactures : allFactures.filter(f => f.statut === type);
+  renderFactures(filtered);
+}
+
+function voirFacture(id) {
+  const f = allFactures.find(f => f.id === id);
+  if (!f) return;
+  currentFacture = f;
+  const el = document.getElementById('detail-content');
+  el.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; justify-content:space-between;">
+        <span class="text-muted text-sm">Numéro</span>
+        <code style="font-weight:700; font-size:.85rem;">${f.id}</code>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span class="text-muted text-sm">Nageur</span>
+        <span style="font-weight:600;">${f.nageur || '—'}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span class="text-muted text-sm">Type</span>
+        <span>${f.type}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span class="text-muted text-sm">Statut</span>
+        <span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? '✓ Payée' : '⏳ À payer'}</span>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border);" />
+      ${f.lignes.map(l => `
+        <div style="display:flex; justify-content:space-between; font-size:.875rem;">
+          <span>${l.qte > 1 ? l.qte + '× ' : ''}${l.desc}</span>
+          <span style="font-weight:600;">${formatMoney(l.prix * l.qte)}</span>
+        </div>`).join('')}
+      <hr style="border:none; border-top:2px solid var(--border);" />
+      <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem;">
+        <span>Total</span>
+        <span style="color:var(--capn-teal);">${formatMoney(f.total)}</span>
+      </div>
+      ${f.statut === 'impayée' ? `
+        <button class="btn btn-gold btn-full mt-8" onclick="ouvrirPaiement('${f.id}')">💳 Payer maintenant →</button>` 
+        : `<div class="alert alert-success mt-8"><span class="alert-icon">✅</span><div style="font-size:.8rem;">Cette facture a été payée.</div></div>`}
+    </div>`;
+  document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function ouvrirPaiement(id) {
+  const f = allFactures.find(f => f.id === id);
+  currentFacture = f;
+  document.getElementById('paiement-montant-btn').textContent = formatMoney(f.total);
+  document.getElementById('paiement-resume').innerHTML = `
+    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span class="text-muted">Facture</span><code>${f.id}</code></div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span class="text-muted">Description</span><span>${f.type} – ${f.nageur}</span></div>
+    <div style="display:flex; justify-content:space-between;"><span class="text-muted">Montant</span><strong style="font-size:1.1rem; color:var(--capn-teal);">${formatMoney(f.total)}</strong></div>`;
+  document.getElementById('modal-paiement').classList.add('open');
+}
+
+async function confirmerPaiement() {
+  if (!currentFacture) return;
+  document.getElementById('paiement-refuse-msg').classList.add('hidden');
+  const btn = document.getElementById('btn-payer-confirmer');
+  setLoading(btn, true);
+  const res = await API.payer(currentFacture.id);
+  setLoading(btn, false);
+  closePaiement();
+
+  const recu = document.getElementById('recu-body');
+  recu.innerHTML = `
+    <div class="alert alert-success mb-16"><span class="alert-icon">✅</span><div>Paiement accepté! Votre reçu a été envoyé par courriel (CU-12 – notification automatique).</div></div>
+    <div style="background:var(--bg-light); border-radius:var(--radius); padding:14px; font-size:.875rem; display:flex; flex-direction:column; gap:8px; border:1px solid var(--border);">
+      <div class="flex justify-between"><span class="text-muted">Facture</span><code>${currentFacture.id}</code></div>
+      <div class="flex justify-between"><span class="text-muted">Montant payé</span><strong>${formatMoney(currentFacture.total)}</strong></div>
+      <div class="flex justify-between"><span class="text-muted">Reçu</span><code style="color:var(--success);">${res.recu}</code></div>
+      <div class="flex justify-between"><span class="text-muted">Date</span><span>${formatDate(new Date().toISOString().slice(0,10))}</span></div>
+    </div>`;
+  document.getElementById('modal-recu').classList.add('open');
+}
+
+async function simulerRefus() {
+  // CU-09 flux alt. 5a.1 – Paiement refusé par le fournisseur
+  const btn = document.getElementById('btn-payer-confirmer');
+  setLoading(btn, true);
+  await API.delay(1000);
+  setLoading(btn, false);
+  document.getElementById('paiement-refuse-msg').classList.remove('hidden');
+  showToast('Paiement refusé — la facture reste à payer.', 'error');
+}
+
+function closePaiement() { document.getElementById('modal-paiement').classList.remove('open'); }
+function closeRecu()     { document.getElementById('modal-recu').classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+loadFactures();
+</script>
+</body>
+</html>

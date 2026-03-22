@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPN – Connexion</title>
+  <meta name="description" content="Portail compétitif du Club Aquatique Les Piranhas du Nord (CAPN)." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="login-page">
+  <!-- Gauche – Branding -->
+  <div class="login-left">
+    <img src="image.png" alt="Logo CAPN" class="login-logo"
+         onerror="this.style.display='none'; document.getElementById('logo-fb').style.display='flex';" />
+    <div id="logo-fb" style="display:none; width:100px; height:100px; background:var(--gold); border-radius:50%; align-items:center; justify-content:center; font-size:2.8rem; margin-bottom:22px;">🐟</div>
+
+    <div class="login-tagline">
+      Portail compétitif <span>CAPN</span>
+    </div>
+    <p class="login-sub mt-12">
+      Gérez vos inscriptions aux compétitions, achats de matériel et événements du Club Aquatique Les Piranhas du Nord.
+    </p>
+
+    <div style="margin-top:42px; display:flex; flex-direction:column; gap:14px; max-width:290px; width:100%;">
+      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
+        <span style="font-size:1.15rem; flex-shrink:0;">🏊</span>
+        <span><strong style="color:#fff;">Parents &amp; nageurs majeurs</strong> — Inscriptions, achats, paiements.</span>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
+        <span style="font-size:1.15rem; flex-shrink:0;">🔑</span>
+        <span><strong style="color:#fff;">Entraîneurs &amp; admin</strong> — Connexion via Google Workspace (clubcapn.com).</span>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
+        <span style="font-size:1.15rem; flex-shrink:0;">🔒</span>
+        <span><strong style="color:#fff;">Sécurisé</strong> — Paiements PCI DSS, données protégées.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Droite – Formulaire -->
+  <div class="login-right">
+    <div class="login-form-box">
+      <h2 style="color:var(--capn-teal); margin-bottom:4px;">Connexion</h2>
+      <p class="text-sm text-muted" style="margin-bottom:24px;">Accès réservé aux membres du club compétitif.</p>
+
+      <!-- Onglets CU-01 -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('parent')" id="tab-parent">Parent / Nageur majeur</button>
+        <button class="tab-btn" onclick="switchTab('admin')" id="tab-admin">Entraîneur / Admin</button>
+      </div>
+
+      <!-- Section parent – AC1 Parent/Tuteur, AC2 Nageur majeur -->
+      <div id="section-parent">
+        <!-- Message d'erreur -->
+        <div id="login-error" class="alert alert-danger mb-16 hidden">
+          <span class="alert-icon">⚠️</span>
+          <div id="login-error-msg">Identifiants invalides. Veuillez vérifier votre code et réessayer.</div>
+        </div>
+
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div class="form-group">
+              <label class="form-label" for="email">Adresse courriel <span class="required">*</span></label>
+              <input type="email" id="email" class="form-control" placeholder="prenom.nom@example.com" value="marie.tremblay@example.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="code">Mot de passe / Code d'invitation <span class="required">*</span></label>
+              <input type="password" id="code" class="form-control" placeholder="Code reçu par courriel" value="CAPN2026" required />
+              <span class="form-hint">Code fourni par le CAPN lors de votre invitation. <a href="#" onclick="showModal('modal-forgot')">Mot de passe oublié?</a></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-login">Se connecter</button>
+          </div>
+        </form>
+
+        <!-- Simulation flux alternatifs (CU-01) -->
+        <div style="margin-top:14px; padding:10px 12px; background:#F7F9FD; border:1px solid var(--border); border-radius:var(--radius); font-size:.76rem; color:var(--text-mid);">
+          <div style="font-weight:600; margin-bottom:6px;">Simulation — flux alternatifs (CU-01) :</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm" onclick="simulerErreur('invalide')">Identifiants invalides</button>
+            <button class="btn btn-ghost btn-sm" onclick="simulerErreur('desactive')">Compte désactivé</button>
+          </div>
+        </div>
+
+        <div class="divider mt-16">ou</div>
+
+        <div style="text-align:center; font-size:.8rem; color:var(--text-light);">
+          Première connexion ? <a href="#" onclick="showModal('modal-activate')">Activer mon compte (CU-02) →</a>
+        </div>
+
+        <!-- Accès rapide prototype -->
+        <div class="alert alert-info mt-20">
+          <span class="alert-icon">💡</span>
+          <div style="font-size:.76rem;">
+            <strong>Prototype – accès direct :</strong><br/>
+            <a href="dashboard-parent.html" style="color:var(--info);">→ Portail parent (Marie Tremblay)</a><br/>
+            <a href="epreuves.html" style="color:var(--info);">→ Portail nageur mineur (Léa)</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section entraîneur / admin – AC3 Entraîneur, AC4 Admin/DG (SSO Google) -->
+      <div id="section-admin" class="hidden">
+        <p class="text-sm text-muted mb-16">
+          Le personnel du CAPN se connecte via le compte Google Workspace du club (<strong>@clubcapn.com</strong>). 
+          Aucun identifiant supplémentaire n'est requis — le contrôle d'accès est géré par rôle (CU-01).
+        </p>
+
+        <!-- Erreur SSO (flux alternatif 2a.2) -->
+        <div id="sso-error" class="alert alert-danger mb-16 hidden">
+          <span class="alert-icon">⚠️</span>
+          <div id="sso-error-msg">Connexion refusée. Votre compte @clubcapn.com n'est pas autorisé ou le service est indisponible.</div>
+        </div>
+
+        <button type="button" class="btn btn-google btn-full btn-lg" onclick="handleGoogleLogin()">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.2 30.2 0 24 0 14.7 0 6.7 5.4 2.7 13.3l7.9 6.1C12.4 13 17.8 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.2-.4-4.7H24v8.9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8C43.8 37.7 46.5 31.6 46.5 24.5z"/>
+            <path fill="#FBBC05" d="M10.6 28.6A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.8-4.6L2.4 13.3A23.8 23.8 0 0 0 0 24c0 3.8.9 7.4 2.6 10.6l8-6z"/>
+            <path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2.1 1.4-4.7 2.3-7.7 2.3-6.2 0-11.5-4.2-13.4-9.8l-8 6.2C6.6 42.5 14.7 48 24 48z"/>
+          </svg>
+          Connexion avec Google (clubcapn.com)
+        </button>
+
+        <div style="margin-top:12px; font-size:.76rem; text-align:center; color:var(--text-light);">
+          <button class="btn btn-ghost btn-sm" style="font-size:.74rem;" onclick="simulerErreurSSO()">Simuler refus SSO (flux alt. 2a.2)</button>
+        </div>
+
+        <div class="alert alert-info mt-20">
+          <span class="alert-icon">💡</span>
+          <div style="font-size:.76rem;"><strong>Prototype :</strong><br/>
+            <a href="dashboard-parent.html" style="color:var(--info);">→ Portail admin (connexion simulée)</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-24" style="text-align:center; font-size:.7rem; color:var(--text-light); border-top:1px solid var(--border); padding-top:14px;">
+        © 2026 Club Aquatique Les Piranhas du Nord · <a href="https://www.clubcapn.com" target="_blank">clubcapn.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Mot de passe oublié -->
+<div class="modal-overlay" id="modal-forgot">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Récupération de compte</h3>
+      <button class="modal-close" onclick="closeModal('modal-forgot')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-sm text-muted mb-16">Saisissez votre adresse courriel. Un lien de réinitialisation vous sera envoyé via Google Workspace.</p>
+      <div class="form-group">
+        <label class="form-label">Adresse courriel <span class="required">*</span></label>
+        <input type="email" class="form-control" placeholder="votre@courriel.com" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-forgot')">Annuler</button>
+      <button class="btn btn-primary" onclick="showToast('Courriel de réinitialisation envoyé!'); closeModal('modal-forgot')">Envoyer le lien</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Activation de compte (CU-02) -->
+<div class="modal-overlay" id="modal-activate">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Activer mon compte – CU-02</h3>
+      <button class="modal-close" onclick="closeModal('modal-activate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info mb-16">
+        <span class="alert-icon">📧</span>
+        <div>Vous devez avoir reçu un courriel d'invitation du CAPN contenant votre code d'activation unique (CU-14 : émis par l'admin/DG).</div>
+      </div>
+
+      <!-- Erreur activation (flux alt. CU-02) -->
+      <div id="activate-error" class="alert alert-danger mb-12 hidden">
+        <span class="alert-icon">⚠️</span>
+        <div id="activate-error-msg">Code invalide.</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Code d'invitation <span class="required">*</span></label>
+          <input type="text" class="form-control code-input" placeholder="______" maxlength="10" id="activation-code" />
+          <span class="form-hint">Code à 6-10 caractères fourni par le CAPN. Essayez : <strong>CAPN2026</strong></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Prénom <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Votre prénom" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Votre nom" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nouveau mot de passe <span class="required">*</span></label>
+          <input type="password" class="form-control" placeholder="Minimum 8 caractères" />
+        </div>
+      </div>
+
+      <!-- Flux alternatifs CU-02 -->
+      <div style="margin-top:12px; padding:9px 11px; background:#F7F9FD; border:1px solid var(--border); border-radius:var(--radius); font-size:.74rem;">
+        <div style="font-weight:600; margin-bottom:5px; color:var(--text-mid);">Flux alternatifs CU-02 :</div>
+        <div style="display:flex; gap:5px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;" onclick="afficherErreurActivation('Code invalide ou inexistant.')">Code invalide</button>
+          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;" onclick="afficherErreurActivation('Ce code a expiré. Contactez le CAPN.')">Code expiré</button>
+          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;" onclick="afficherErreurActivation('Ce code a déjà été utilisé.')">Déjà utilisé</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-activate')">Annuler</button>
+      <button class="btn btn-primary" id="btn-activer" onclick="activerCompte()">Activer mon compte</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="mock-data.js"></script>
+<script>
+function switchTab(tab) {
+  document.getElementById('tab-parent').classList.toggle('active', tab === 'parent');
+  document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+  document.getElementById('section-parent').classList.toggle('hidden', tab !== 'parent');
+  document.getElementById('section-admin').classList.toggle('hidden', tab !== 'admin');
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const errorBox = document.getElementById('login-error');
+  errorBox.classList.add('hidden');
+  const btn = document.getElementById('btn-login');
+  const email = document.getElementById('email').value;
+  const code  = document.getElementById('code').value;
+  setLoading(btn, true);
+  const res = await API.login(email, code);
+  setLoading(btn, false);
+  if (res.success) {
+    showToast('Connexion réussie! Redirection…');
+    setTimeout(() => window.location.href = 'dashboard-parent.html', 1100);
+  } else {
+    document.getElementById('login-error-msg').textContent = res.error;
+    errorBox.classList.remove('hidden');
+  }
+}
+
+function simulerErreur(type) {
+  const errorBox = document.getElementById('login-error');
+  const msg = document.getElementById('login-error-msg');
+  if (type === 'invalide') msg.textContent = 'Identifiants invalides. Veuillez vérifier votre courriel et votre code.';
+  if (type === 'desactive') msg.textContent = 'Votre compte est désactivé. Veuillez contacter l\'équipe du CAPN pour régulariser votre situation.';
+  errorBox.classList.remove('hidden');
+}
+
+function simulerErreurSSO() {
+  const el = document.getElementById('sso-error');
+  el.classList.remove('hidden');
+  document.getElementById('sso-error-msg').textContent = 'Connexion refusée par Google Workspace. Votre compte @clubcapn.com n\'est pas autorisé ou le service SSO est temporairement indisponible.';
+}
+
+async function handleGoogleLogin() {
+  const btn = event.currentTarget;
+  setLoading(btn, true);
+  await API.delay(900);
+  setLoading(btn, false);
+  showToast('Connexion Google réussie! Redirection…');
+  setTimeout(() => window.location.href = 'dashboard-parent.html', 1100);
+}
+
+async function activerCompte() {
+  const code = document.getElementById('activation-code').value.trim().toUpperCase();
+  document.getElementById('activate-error').classList.add('hidden');
+  if (!code) { afficherErreurActivation('Veuillez saisir un code d\'invitation.'); return; }
+  const btn = document.getElementById('btn-activer');
+  setLoading(btn, true);
+  await API.delay(900);
+  setLoading(btn, false);
+  if (code === 'CAPN2026') {
+    showToast('Compte activé avec succès! Vous pouvez maintenant vous connecter.');
+    closeModal('modal-activate');
+  } else {
+    afficherErreurActivation('Code invalide ou inexistant. Vérifiez votre courriel d\'invitation.');
+  }
+}
+
+function afficherErreurActivation(msg) {
+  document.getElementById('activate-error-msg').textContent = msg;
+  document.getElementById('activate-error').classList.remove('hidden');
+}
+
+function showModal(id)  { document.getElementById(id).classList.add('open');    }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPN – Choisir mes épreuves</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Navbar nageur mineur (accès limité) -->
+<nav class="navbar">
+  <a href="#" class="navbar-brand">
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+  </a>
+  <ul class="navbar-nav">
+    <li><a href="epreuves.html" class="active">🏊 Mes épreuves</a></li>
+    <li><a href="#" onclick="showInfoPortail()">📋 Mes inscriptions</a></li>
+  </ul>
+  <div class="navbar-user">
+    <span class="badge badge-info" style="font-size:.7rem;">Nageur mineur</span>
+    <div class="avatar" style="background:var(--aqua); color:#fff;">LT</div>
+    <span class="text-sm">Léa Tremblay</span>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <span>Portail nageur</span>
+      <span class="breadcrumb-sep">›</span>
+      <span>Choix des épreuves</span>
+    </div>
+    <h1>🏊 Choisir mes épreuves</h1>
+    <p>Sélectionne tes épreuves pour chaque compétition. Ton entraîneur les validera par la suite.</p>
+  </div>
+</div>
+
+<div class="container section">
+
+  <!-- Info nageur -->
+  <div class="card mb-24">
+    <div class="card-body" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div class="avatar" style="width:54px; height:54px; font-size:1.2rem; background:var(--aqua); color:#fff;">LT</div>
+      <div>
+        <div style="font-weight:700; font-size:1.1rem;">Léa Tremblay</div>
+        <div class="text-sm text-muted">14 ans · Groupe Développement · Piscine Sophie-Barat</div>
+      </div>
+      <div class="alert alert-warning" style="margin-left:auto; flex:0 1 auto;">
+        <span class="alert-icon">⚠️</span>
+        <div style="font-size:.8rem;">Maximum <strong>3 épreuves</strong> par compétition selon les règlements FINA-Québec.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sélecteur de compétition -->
+  <div class="card mb-24">
+    <div class="card-header"><span>🏆 Compétition</span></div>
+    <div class="card-body">
+      <div id="comp-selector" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="color:var(--text-light); font-size:.875rem;">Chargement…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section épreuves -->
+  <div id="epreuves-section" class="hidden">
+    <!-- Steps -->
+    <div class="step-bar mb-24">
+      <div class="step done"   data-n="1"> Compétition</div>
+      <div class="step active" data-n="2"> Épreuves</div>
+      <div class="step"        data-n="3"> Confirmation</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start;">
+
+      <!-- Liste épreuves -->
+      <div>
+        <div id="epreuves-par-categorie" style="display:flex; flex-direction:column; gap:20px;"></div>
+      </div>
+
+      <!-- Récap sidebar -->
+      <div style="position:sticky; top:80px;">
+        <div class="card">
+          <div class="card-header" style="background:var(--capn-teal); color:#fff;">
+            <span>📋 Mes épreuves choisies</span>
+            <span id="count-badge" style="border:1px solid rgba(255,255,255,.4); padding:2px 10px; border-radius:4px; font-size:.78rem;">0 / 3</span>
+          </div>
+          <div id="recap-list" style="min-height:80px; padding:16px 18px;">
+            <div id="recap-empty" class="text-sm text-muted" style="text-align:center; padding:12px 0;">Aucune épreuve sélectionnée.</div>
+          </div>
+          <div id="fenetre-alert" class="hidden" style="padding:10px 16px; background:var(--warning-bg); border-top:1px solid var(--border); font-size:.78rem; color:var(--warning); display:flex; gap:8px;">
+            <span>⚠️</span><span>Fenêtre de choix fermée — soumission désactivée (CU-06 flux alt. 2a.1).</span>
+          </div>
+          <div style="padding:14px 18px; border-top:1px solid var(--border);">
+            <button class="btn btn-primary btn-full" id="btn-soumettre" onclick="soumettreEpreuves()" disabled>
+              Soumettre mon choix →
+            </button>
+            <div class="text-xs text-muted mt-8 text-center">Ton entraîneur sera notifié de ton choix.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- État: Aucune compétition -->
+  <div id="no-comp" class="hidden" style="text-align:center; padding:50px; color:var(--text-light);">
+    <div style="font-size:3rem; margin-bottom:12px;">🏊</div>
+    <h3>Pas de compétition à venir</h3>
+    <p class="text-sm mt-8">Tu n'as pas encore été inscrit(e) à une compétition par ton parent ou tuteur.</p>
+  </div>
+
+</div>
+
+<!-- Modal: Confirmation soumission -->
+<div class="modal-overlay" id="modal-soumis">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>✅ Épreuves soumises!</h3>
+      <button class="modal-close" onclick="document.getElementById('modal-soumis').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center; font-size:3rem; margin-bottom:12px;">🎉</div>
+      <p class="text-sm mb-16">Ton choix d'épreuves a été envoyé à ton entraîneur pour validation. Tu recevras une confirmation par courriel.</p>
+      <div id="confirmation-list"></div>
+      <div class="alert alert-info mt-16">
+        <span class="alert-icon">📧</span>
+        <div style="font-size:.82rem;">Ton entraîneur examinera tes choix et te confirmera lors de ton prochain entraînement.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-full" onclick="document.getElementById('modal-soumis').classList.remove('open')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="mock-data.js"></script>
+<script>
+let selectedComp = null;
+let selectedEpreuves = new Set();
+let epreuvesData = [];
+const MAX_EPREUVES = 3;
+
+async function init() {
+  const comps = await API.getCompetitions();
+  // Compétitions où Léa est inscrite et futures/ouvertes
+  const inscrites = comps.filter(c => c.inscription_nageur['n001'] === 'inscrit');
+
+  const sel = document.getElementById('comp-selector');
+  if (!inscrites.length) {
+    sel.closest('.card').classList.add('hidden');
+    document.getElementById('no-comp').classList.remove('hidden');
+    return;
+  }
+
+  // CU-06 Pré-condition: fenêtre de choix ouverte = compétition dont inscriptions sont ouvertes
+  sel.innerHTML = inscrites.map(c => {
+    const fenetreOuverte = c.statut === 'ouvert';
+    const echeancePasse = new Date(c.echeance_inscription) < new Date();
+    const fenetreLabel = fenetreOuverte ? 'Fenêtre ouverte' : 'Fenêtre fermée';
+    return `
+    <div class="check-group ${!fenetreOuverte ? '' : ''}" onclick="selectComp('${c.id}', this, ${fenetreOuverte})" id="comp-${c.id}" style="cursor:pointer;">
+      <input type="radio" name="comp" value="${c.id}" style="accent-color:var(--aqua);" />
+      <div style="flex:1;">
+        <div style="font-weight:700;">${c.nom}</div>
+        <div class="text-xs text-muted">${formatDate(c.date_debut)} · ${c.lieu.split(',')[0]}</div>
+      </div>
+      <span class="badge ${fenetreOuverte ? 'badge-open' : 'badge-closed'}">${fenetreLabel}</span>
+    </div>`;
+  }).join('');
+}
+
+async function selectComp(compId, el, fenetreOuverte) {
+  document.querySelectorAll('#comp-selector .check-group').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+
+  const comps = await API.getCompetitions();
+  selectedComp = comps.find(c => c.id === compId);
+  selectedEpreuves.clear();
+
+  const { epreuves, choisies } = await API.getEpreuves(compId, 'n001');
+  epreuvesData = epreuves;
+  choisies.forEach(id => selectedEpreuves.add(id));
+
+  const section = document.getElementById('epreuves-section');
+  section.classList.remove('hidden');
+
+  // CU-06 flux alt. 2a.1 – Fenêtre fermée : empêcher la soumission
+  const fenetreAlert = document.getElementById('fenetre-alert');
+  if (!fenetreOuverte) {
+    fenetreAlert.classList.remove('hidden');
+    document.getElementById('btn-soumettre').disabled = true;
+  } else {
+    fenetreAlert.classList.add('hidden');
+  }
+
+  renderEpreuves(epreuves, fenetreOuverte);
+  updateRecap();
+}
+
+function renderEpreuves(epreuves, fenetreOuverte = true) {
+  const categories = [...new Set(epreuves.map(e => e.categorie))];
+  const container = document.getElementById('epreuves-par-categorie');
+  container.innerHTML = categories.map(cat => {
+    const catEpreuves = epreuves.filter(e => e.categorie === cat);
+    return `
+      <div>
+        <div class="section-title">${cat}</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${catEpreuves.map(ep => buildEpreuveCard(ep, fenetreOuverte)).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function buildEpreuveCard(ep, fenetreOuverte = true) {
+  const sel = selectedEpreuves.has(ep.id);
+  const disabled = !fenetreOuverte ? 'disabled-ep' : '';
+  const clickHandler = fenetreOuverte ? `onclick="toggleEpreuve('${ep.id}')"` : '';
+  return `
+    <div class="epreuve-card ${sel ? 'selected' : ''} ${disabled}" id="ep-${ep.id}" ${clickHandler}>
+      <div>
+        <div class="epreuve-title">${ep.nom}</div>
+        <div class="epreuve-meta">${ep.categorie} · ${ep.distance}m · Mixte</div>
+      </div>
+      <div class="epreuve-check">✓</div>
+    </div>`;
+}
+
+function toggleEpreuve(id) {
+  if (selectedEpreuves.has(id)) {
+    selectedEpreuves.delete(id);
+    document.getElementById('ep-' + id).classList.remove('selected');
+  } else {
+    if (selectedEpreuves.size >= MAX_EPREUVES) {
+      showToast(`Maximum ${MAX_EPREUVES} épreuves autorisées.`, 'error');
+      return;
+    }
+    selectedEpreuves.add(id);
+    document.getElementById('ep-' + id).classList.add('selected');
+  }
+  updateRecap();
+}
+
+function updateRecap() {
+  const n = selectedEpreuves.size;
+  document.getElementById('count-badge').textContent = n + ' / ' + MAX_EPREUVES;
+  const list = document.getElementById('recap-list');
+  const empty = document.getElementById('recap-empty');
+  const btn = document.getElementById('btn-soumettre');
+
+  if (!n) {
+    empty.style.display = '';
+    list.querySelectorAll('.recap-item').forEach(e => e.remove());
+    btn.disabled = true;
+    return;
+  }
+  empty.style.display = 'none';
+  // clear existing items
+  list.querySelectorAll('.recap-item').forEach(e => e.remove());
+  [...selectedEpreuves].forEach((id, i) => {
+    const ep = epreuvesData.find(e => e.id === id);
+    if (!ep) return;
+    const div = document.createElement('div');
+    div.className = 'recap-item';
+    div.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:.85rem;';
+    div.innerHTML = `<span style="width:20px; height:20px; border-radius:50%; background:var(--aqua); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0;">${i+1}</span>
+      <span style="flex:1; font-weight:500;">${ep.nom}</span>`;
+    list.insertBefore(div, empty);
+  });
+  btn.disabled = false;
+}
+
+async function soumettreEpreuves() {
+  if (!selectedComp || !selectedEpreuves.size) return;
+  const btn = document.getElementById('btn-soumettre');
+  setLoading(btn, true);
+  await API.soumettreEpreuves(selectedComp.id, 'n001', [...selectedEpreuves]);
+  setLoading(btn, false);
+
+  const confirmList = document.getElementById('confirmation-list');
+  confirmList.innerHTML = [...selectedEpreuves].map((id, i) => {
+    const ep = epreuvesData.find(e => e.id === id);
+    return `<div style="display:flex; align-items:center; gap:10px; background:var(--success-bg); padding:8px 12px; border-radius:8px; margin-bottom:6px; font-size:.85rem;">
+      <span style="font-weight:700; color:var(--success);">${i+1}.</span>
+      <span style="font-weight:600;">${ep.nom}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('modal-soumis').classList.add('open');
+  showToast('Épreuves soumises avec succès!');
+}
+
+function showInfoPortail() {
+  showToast('ℹ️ Portail mineur — consultation uniquement. Démo non développée.');
+}
+
+init();
+</script>
+</body>
+</html>
