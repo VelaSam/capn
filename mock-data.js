@@ -1,15 +1,12 @@
-/**
- * CAPN Prototype – Données simulées (mock backend)
- * Toutes les "requêtes" sont simulées avec setTimeout pour imiter un vrai appel HTTP.
- */
 
-// ── Utilisateur connecté (simulé) ─────────────────────────────
+
+
 const CURRENT_USER = {
   id: 'u001',
   prenom: 'Marie',
   nom: 'Tremblay',
   email: 'marie.tremblay@example.com',
-  role: 'parent', // 'parent' | 'nageur_mineur' | 'admin'
+  role: 'parent', 
   initiales: 'MT',
   enfants: [
     { id: 'n001', prenom: 'Léa', nom: 'Tremblay', age: 14, groupe: 'Développement', inscrit: true },
@@ -27,7 +24,7 @@ const CURRENT_NAGEUR = {
   initiales: 'LT'
 };
 
-// ── Compétitions ─────────────────────────────────────────────
+
 const COMPETITIONS = [
   {
     id: 'comp01',
@@ -73,7 +70,7 @@ const COMPETITIONS = [
   }
 ];
 
-// ── Épreuves possibles ────────────────────────────────────────
+
 const EPREUVES = [
   { id: 'ep01', nom: '50m Libre',     categorie: 'Libre',     distance: 50,  sexe: 'F/M' },
   { id: 'ep02', nom: '100m Libre',    categorie: 'Libre',     distance: 100, sexe: 'F/M' },
@@ -89,7 +86,7 @@ const EPREUVES = [
 
 
 
-// ── Factures ──────────────────────────────────────────────────
+
 const FACTURES = [
   {
     id: 'FAC-2026-001',
@@ -119,17 +116,15 @@ const FACTURES = [
   }
 ];
 
-// ── Épreuves choisies par nageur ──────────────────────────────
+
 const EPREUVES_CHOISIES = {
-  'n001-comp03': ['ep01', 'ep05', 'ep08'] // Léa à l'Invitational (passé)
+  'n001-comp03': ['ep01', 'ep05', 'ep08']
 };
 
-// ── Panier courant ─────────────────────────────────────────────
+
 let panier = [];
 
-// ════════════════════════════════════════════════════════════
-//  API simulée – retourne des Promises avec délai réseau fictif
-// ════════════════════════════════════════════════════════════
+
 
 const API = {
   delay: (ms = 600) => new Promise(r => setTimeout(r, ms)),
@@ -189,7 +184,7 @@ const API = {
   }
 };
 
-// ── Utilitaires ───────────────────────────────────────────────
+
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr + 'T12:00:00');
@@ -227,7 +222,7 @@ function setLoading(btn, loading) {
   }
 }
 
-// Spin animation
+
 const spinStyle = document.createElement('style');
 spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
 document.head.appendChild(spinStyle);

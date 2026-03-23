@@ -38,10 +38,10 @@
 <div class="container section">
   <div style="display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start;">
 
-    <!-- Liste des factures -->
+
     <div style="display:flex; flex-direction:column; gap:16px;">
 
-      <!-- Résumé -->
+
       <div class="grid-3" id="facture-stats">
         <div class="stat-card">
           <div class="stat-icon gold">⏳</div>
@@ -66,14 +66,14 @@
         </div>
       </div>
 
-      <!-- Filtres -->
+
       <div style="display:flex; gap:8px;">
         <button class="btn btn-navy btn-sm" onclick="filterFact('tout')" id="ff-tout">Toutes</button>
         <button class="btn btn-ghost btn-sm" onclick="filterFact('impayée')" id="ff-imp">À payer</button>
         <button class="btn btn-ghost btn-sm" onclick="filterFact('payée')" id="ff-pay">Payées</button>
       </div>
 
-      <!-- Table des factures -->
+
       <div class="card">
         <div class="table-wrap">
           <table class="capn-table" id="facture-table">
@@ -97,10 +97,10 @@
       </div>
     </div>
 
-    <!-- Détail facture (sidebar) -->
+
     <div style="position:sticky; top:80px;" id="detail-panel">
       <div class="card">
-        <div class="card-header"><span>📋 Détail de la facture</span></div>
+        <div class="card-header"><span>Détail de la facture</span></div>
         <div class="card-body" id="detail-content">
           <div style="text-align:center; padding:20px; color:var(--text-light); font-size:.875rem;">
             Cliquez sur « Voir » pour afficher le détail d'une facture.

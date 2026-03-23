@@ -10,7 +10,7 @@
 <body>
 
 <div class="login-page">
-  <!-- Gauche – Branding -->
+
   <div class="login-left">
     <img src="image.png" alt="Logo CAPN" class="login-logo"
          onerror="this.style.display='none'; document.getElementById('logo-fb').style.display='flex';" />
@@ -23,23 +23,9 @@
       Gérez vos inscriptions aux compétitions et événements du Club Aquatique Les Piranhas du Nord.
     </p>
 
-    <div style="margin-top:42px; display:flex; flex-direction:column; gap:14px; max-width:290px; width:100%;">
-      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
-        <span style="font-size:1.15rem; flex-shrink:0;">🏊</span>
-        <span><strong style="color:#fff;">Parents &amp; nageurs majeurs</strong> — Inscriptions, achats, paiements.</span>
-      </div>
-      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
-        <span style="font-size:1.15rem; flex-shrink:0;">🔑</span>
-        <span><strong style="color:#fff;">Entraîneurs &amp; admin</strong> — Connexion via Google Workspace (clubcapn.com).</span>
-      </div>
-      <div style="display:flex; gap:11px; align-items:flex-start; color:rgba(255,255,255,.78); font-size:.83rem;">
-        <span style="font-size:1.15rem; flex-shrink:0;">🔒</span>
-        <span><strong style="color:#fff;">Sécurisé</strong> — Paiements PCI DSS, données protégées.</span>
-      </div>
-    </div>
   </div>
 
-  <!-- Droite – Formulaire -->
+
   <div class="login-right">
     <div class="login-form-box">
       <h2 style="color:var(--capn-teal); margin-bottom:4px;">Connexion</h2>
@@ -49,9 +35,9 @@
         <button class="tab-btn active" onclick="switchTab('parent')" id="tab-parent">Parent / Nageur mineur</button>
       </div>
 
-      <!-- Section parent – AC1 Parent/Tuteur, AC2 Nageur majeur -->
+
       <div id="section-parent">
-        <!-- Message d'erreur -->
+
         <div id="login-error" class="alert alert-danger mb-16 hidden">
           <span class="alert-icon">⚠️</span>
           <div id="login-error-msg">Identifiants invalides. Veuillez vérifier votre code et réessayer.</div>
@@ -66,13 +52,12 @@
             <div class="form-group">
               <label class="form-label" for="code">Mot de passe / Code d'invitation <span class="required">*</span></label>
               <input type="password" id="code" class="form-control" placeholder="Code reçu par courriel" value="CAPN2026" required />
-              <span class="form-hint">Code fourni par le CAPN lors de votre invitation. <a href="#" onclick="showModal('modal-forgot')">Mot de passe oublié?</a></span>
             </div>
             <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-login">Se connecter</button>
           </div>
         </form>
 
-        <!-- Simulation flux alternatifs (CU-01) -->
+
         <div style="margin-top:14px; padding:10px 12px; background:#F7F9FD; border:1px solid var(--border); border-radius:var(--radius); font-size:.76rem; color:var(--text-mid);">
           <div style="font-weight:600; margin-bottom:6px;">Simulation — flux alternatifs (CU-01) :</div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -87,7 +72,7 @@
           Première connexion ? <a href="#" onclick="showModal('modal-activate')">Activer mon compte (CU-02) →</a>
         </div>
 
-        <!-- Accès rapide prototype -->
+
         <div class="alert alert-info mt-20">
           <span class="alert-icon">💡</span>
           <div style="font-size:.76rem;">
@@ -107,7 +92,7 @@
   </div>
 </div>
 
-<!-- Modal: Mot de passe oublié -->
+
 <div class="modal-overlay" id="modal-forgot">
   <div class="modal">
     <div class="modal-header">
@@ -128,7 +113,7 @@
   </div>
 </div>
 
-<!-- Modal: Activation de compte (CU-02) -->
+
 <div class="modal-overlay" id="modal-activate">
   <div class="modal">
     <div class="modal-header">
@@ -141,7 +126,7 @@
         <div>Vous devez avoir reçu un courriel d'invitation du CAPN contenant votre code d'activation unique (CU-14 : émis par l'admin/DG).</div>
       </div>
 
-      <!-- Erreur activation (flux alt. CU-02) -->
+
       <div id="activate-error" class="alert alert-danger mb-12 hidden">
         <span class="alert-icon">⚠️</span>
         <div id="activate-error-msg">Code invalide.</div>
@@ -169,7 +154,7 @@
         </div>
       </div>
 
-      <!-- Flux alternatifs CU-02 -->
+
       <div style="margin-top:12px; padding:9px 11px; background:#F7F9FD; border:1px solid var(--border); border-radius:var(--radius); font-size:.74rem;">
         <div style="font-weight:600; margin-bottom:5px; color:var(--text-mid);">Flux alternatifs CU-02 :</div>
         <div style="display:flex; gap:5px; flex-wrap:wrap;">

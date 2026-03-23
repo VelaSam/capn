@@ -219,7 +219,7 @@ h4 {
   margin-bottom: 24px;
 }
 
-/* ── Navbar ── */
+
 .navbar {
   background: var(--capn-teal);
   padding: 0 28px;
@@ -268,7 +268,6 @@ h4 {
   font-size: .88rem;
   font-weight: 500;
   padding: 5px 13px;
-  border-radius: var(--radius);
   transition: all var(--transition);
   text-decoration: none;
 }
@@ -296,7 +295,6 @@ h4 {
 .avatar {
   width: 34px;
   height: 34px;
-  border-radius: 50%;
   background: var(--gold);
   color: var(--capn-teal);
   display: flex;
@@ -307,7 +305,7 @@ h4 {
   flex-shrink: 0;
 }
 
-/* ── Page Header ── */
+
 .page-header {
   background: var(--capn-teal);
   padding: 32px 0 26px;
@@ -348,10 +346,9 @@ h4 {
   opacity: .45;
 }
 
-/* ── Cards ── */
+
 .card {
   background: var(--bg-white);
-  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -364,18 +361,17 @@ h4 {
 .card-header {
   padding: 13px 22px;
   border-bottom: 1px solid var(--border);
-  font-weight: 600;
-  font-size: .93rem;
+  font-weight: 800;
+  font-size: 1.2rem;
   background: #F7F9FD;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* ── Stat Cards ── */
+
 .stat-card {
   background: var(--bg-white);
-  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   padding: 18px 20px;
@@ -392,7 +388,6 @@ h4 {
 .stat-icon {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -442,13 +437,12 @@ h4 {
   margin-top: 2px;
 }
 
-/* ── Buttons ── */
+
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 9px 18px;
-  border-radius: var(--radius);
   font-family: inherit;
   font-size: .88rem;
   font-weight: 600;
@@ -553,7 +547,7 @@ h4 {
   pointer-events: none;
 }
 
-/* Google SSO button */
+
 .btn-google {
   background: #fff;
   color: #3C4043;
@@ -571,13 +565,12 @@ h4 {
   height: 20px;
 }
 
-/* ── Badges ── */
+
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 3px;
   padding: 2px 9px;
-  border-radius: 4px;
   font-size: .73rem;
   font-weight: 600;
   letter-spacing: .02em;
@@ -625,7 +618,7 @@ h4 {
   border: 1px solid #FDE68A;
 }
 
-/* ── Forms ── */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -647,7 +640,6 @@ h4 {
   width: 100%;
   padding: 8px 12px;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius);
   font-family: inherit;
   font-size: .88rem;
   color: var(--text-dark);
@@ -680,13 +672,12 @@ textarea.form-control {
   gap: 14px;
 }
 
-/* Checkbox / Radio custom */
+
 .check-group {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 11px 13px;
-  border-radius: var(--radius);
   border: 1.5px solid var(--border);
   cursor: pointer;
   transition: border-color var(--transition), background var(--transition);
@@ -711,7 +702,7 @@ textarea.form-control {
   margin-top: 1px;
 }
 
-/* ── Dividers ── */
+
 .divider {
   display: flex;
   align-items: center;
@@ -729,7 +720,7 @@ textarea.form-control {
   background: var(--border);
 }
 
-/* ── Grids ── */
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -748,7 +739,7 @@ textarea.form-control {
   gap: 14px;
 }
 
-/* ── Table ── */
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -786,10 +777,9 @@ table.capn-table {
   background: #F7F9FD;
 }
 
-/* ── Alert ── */
+
 .alert {
   padding: 12px 16px;
-  border-radius: var(--radius);
   font-size: .855rem;
   display: flex;
   align-items: flex-start;
@@ -827,7 +817,7 @@ table.capn-table {
   margin-top: 1px;
 }
 
-/* ── Modal ── */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -849,7 +839,6 @@ table.capn-table {
 
 .modal {
   background: #fff;
-  border-radius: var(--radius-lg);
   width: 100%;
   max-width: 540px;
   box-shadow: var(--shadow-lg);
@@ -895,7 +884,7 @@ table.capn-table {
   color: var(--danger);
 }
 
-/* ── Tabs ── */
+
 .tabs {
   display: flex;
   gap: 2px;
@@ -915,7 +904,6 @@ table.capn-table {
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   transition: all var(--transition);
-  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .tab-btn:hover {
@@ -928,7 +916,7 @@ table.capn-table {
   border-bottom-color: var(--aqua);
 }
 
-/* ── Steps ── */
+
 .step-bar {
   display: flex;
   gap: 0;
@@ -949,7 +937,6 @@ table.capn-table {
   display: block;
   width: 28px;
   height: 28px;
-  border-radius: 50%;
   background: var(--border);
   color: var(--text-mid);
   font-size: .8rem;
@@ -997,10 +984,9 @@ table.capn-table {
   color: var(--success);
 }
 
-/* ── Épreuve cards ── */
+
 .epreuve-card {
   border: 1.5px solid var(--border);
-  border-radius: var(--radius);
   padding: 12px 15px;
   cursor: pointer;
   transition: border-color var(--transition), background var(--transition);
@@ -1043,7 +1029,6 @@ table.capn-table {
 .epreuve-check {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
   background: var(--aqua);
   color: #fff;
   display: flex;
@@ -1054,11 +1039,10 @@ table.capn-table {
   transition: opacity var(--transition);
 }
 
-/* ── Product cards ── */
+
 .product-card {
   background: #fff;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
   overflow: hidden;
   transition: box-shadow var(--transition), border-color var(--transition);
   display: flex;
@@ -1116,7 +1100,7 @@ table.capn-table {
   border-top: 1px solid var(--border);
 }
 
-/* ── Sidebar Layout ── */
+
 .layout-with-sidebar {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -1127,7 +1111,6 @@ table.capn-table {
 .cart-sidebar {
   background: #fff;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
   position: sticky;
   top: 74px;
   overflow: hidden;
@@ -1176,7 +1159,6 @@ table.capn-table {
   cursor: pointer;
   font-size: .95rem;
   padding: 2px 4px;
-  border-radius: 3px;
 }
 
 .cart-item-remove:hover {
@@ -1200,12 +1182,11 @@ table.capn-table {
   font-size: .85rem;
 }
 
-/* ── Invoice ── */
+
 .invoice-header {
   background: var(--capn-teal);
   color: #fff;
   padding: 28px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   border-bottom: 3px solid var(--gold);
 }
 
@@ -1238,10 +1219,9 @@ table.capn-table {
   padding: 14px 28px;
   border-top: 2px solid var(--border);
   background: #F7F9FD;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* ── Toast ── */
+
 .toast-container {
   position: fixed;
   bottom: 22px;
@@ -1256,7 +1236,6 @@ table.capn-table {
   background: var(--capn-teal);
   color: #fff;
   padding: 12px 18px;
-  border-radius: var(--radius);
   font-size: .85rem;
   font-weight: 500;
   box-shadow: var(--shadow-lg);
@@ -1290,11 +1269,10 @@ table.capn-table {
   }
 }
 
-/* ── Competition cards ── */
+
 .comp-card {
   background: #fff;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1367,11 +1345,10 @@ table.capn-table {
   gap: 3px;
   background: #EEF3FA;
   padding: 2px 7px;
-  border-radius: 4px;
   border: 1px solid var(--border);
 }
 
-/* ── Login page ── */
+
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -1401,7 +1378,6 @@ table.capn-table {
 }
 
 .login-logo {
-  width: 100px;
   height: 100px;
   object-fit: contain;
   margin-bottom: 22px;
@@ -1440,7 +1416,7 @@ table.capn-table {
   text-transform: uppercase;
 }
 
-/* ── Misc ── */
+
 .text-center {
   text-align: center;
 }
@@ -1472,7 +1448,7 @@ table.capn-table {
   border-bottom: 2px solid var(--border);
 }
 
-/* ── Scrollbar ── */
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -1484,14 +1460,13 @@ table.capn-table {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-dark);
 }
 
-/* ── Responsive ── */
+
 @media (max-width: 900px) {
   .login-left {
     display: none;

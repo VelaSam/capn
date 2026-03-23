@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- Navbar nageur mineur (accès limité) -->
+
 <nav class="navbar">
   <a href="#" class="navbar-brand">
     <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
@@ -38,7 +38,7 @@
 
 <div class="container section">
 
-  <!-- Info nageur -->
+
   <div class="card mb-24">
     <div class="card-body" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
       <div class="avatar" style="width:54px; height:54px; font-size:1.2rem; background:var(--aqua); color:#fff;">LT</div>
@@ -53,9 +53,9 @@
     </div>
   </div>
 
-  <!-- Sélecteur de compétition -->
+
   <div class="card mb-24">
-    <div class="card-header"><span>🏆 Compétition</span></div>
+    <div class="card-header"><span>Compétition</span></div>
     <div class="card-body">
       <div id="comp-selector" style="display:flex; flex-direction:column; gap:10px;">
         <div style="color:var(--text-light); font-size:.875rem;">Chargement…</div>
@@ -63,9 +63,9 @@
     </div>
   </div>
 
-  <!-- Section épreuves -->
+
   <div id="epreuves-section" class="hidden">
-    <!-- Steps -->
+
     <div class="step-bar mb-24">
       <div class="step done"   data-n="1"> Compétition</div>
       <div class="step active" data-n="2"> Épreuves</div>
@@ -74,16 +74,16 @@
 
     <div style="display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start;">
 
-      <!-- Liste épreuves -->
+
       <div>
         <div id="epreuves-par-categorie" style="display:flex; flex-direction:column; gap:20px;"></div>
       </div>
 
-      <!-- Récap sidebar -->
+
       <div style="position:sticky; top:80px;">
         <div class="card">
           <div class="card-header" style="background:var(--capn-teal); color:#fff;">
-            <span>📋 Mes épreuves choisies</span>
+            <span>Mes épreuves choisies</span>
             <span id="count-badge" style="border:1px solid rgba(255,255,255,.4); padding:2px 10px; border-radius:4px; font-size:.78rem;">0 / 3</span>
           </div>
           <div id="recap-list" style="min-height:80px; padding:16px 18px;">
@@ -103,7 +103,7 @@
     </div>
   </div>
 
-  <!-- État: Aucune compétition -->
+
   <div id="no-comp" class="hidden" style="text-align:center; padding:50px; color:var(--text-light);">
     <div style="font-size:3rem; margin-bottom:12px;">🏊</div>
     <h3>Pas de compétition à venir</h3>
@@ -112,7 +112,7 @@
 
 </div>
 
-<!-- Modal: Confirmation soumission -->
+
 <div class="modal-overlay" id="modal-soumis">
   <div class="modal" style="max-width:420px;">
     <div class="modal-header">
@@ -145,7 +145,7 @@ const MAX_EPREUVES = 3;
 
 async function init() {
   const comps = await API.getCompetitions();
-  // Compétitions où Léa est inscrite et futures/ouvertes
+
   const inscrites = comps.filter(c => c.inscription_nageur['n001'] === 'inscrit');
 
   const sel = document.getElementById('comp-selector');
@@ -155,7 +155,7 @@ async function init() {
     return;
   }
 
-  // CU-06 Pré-condition: fenêtre de choix ouverte = compétition dont inscriptions sont ouvertes
+
   sel.innerHTML = inscrites.map(c => {
     const fenetreOuverte = c.statut === 'ouvert';
     const echeancePasse = new Date(c.echeance_inscription) < new Date();
@@ -188,7 +188,7 @@ async function selectComp(compId, el, fenetreOuverte) {
   const section = document.getElementById('epreuves-section');
   section.classList.remove('hidden');
 
-  // CU-06 flux alt. 2a.1 – Fenêtre fermée : empêcher la soumission
+
   const fenetreAlert = document.getElementById('fenetre-alert');
   if (!fenetreOuverte) {
     fenetreAlert.classList.remove('hidden');
@@ -259,7 +259,7 @@ function updateRecap() {
     return;
   }
   empty.style.display = 'none';
-  // clear existing items
+
   list.querySelectorAll('.recap-item').forEach(e => e.remove());
   [...selectedEpreuves].forEach((id, i) => {
     const ep = epreuvesData.find(e => e.id === id);
