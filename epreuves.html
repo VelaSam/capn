@@ -15,7 +15,6 @@
   </a>
   <ul class="navbar-nav">
     <li><a href="epreuves.html" class="active">🏊 Mes épreuves</a></li>
-    <li><a href="#" onclick="showInfoPortail()">📋 Mes inscriptions</a></li>
   </ul>
   <div class="navbar-user">
     <span class="badge badge-info" style="font-size:.7rem;">Nageur mineur</span>
@@ -292,10 +291,6 @@ async function soumettreEpreuves() {
 
   document.getElementById('modal-soumis').classList.add('open');
   showToast('Épreuves soumises avec succès!');
-}
-
-function showInfoPortail() {
-  showToast('ℹ️ Portail mineur — consultation uniquement. Démo non développée.');
 }
 
 init();
