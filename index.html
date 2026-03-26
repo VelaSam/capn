@@ -14,7 +14,7 @@
   <div class="login-left">
     <img src="image.png" alt="Logo CAPN" class="login-logo"
          onerror="this.style.display='none'; document.getElementById('logo-fb').style.display='flex';" />
-    <div id="logo-fb" style="display:none; width:100px; height:100px; background:var(--gold); border-radius:50%; align-items:center; justify-content:center; font-size:2.8rem; margin-bottom:22px;">🐟</div>
+    <div id="logo-fb" style="display:none; width:100px; height:100px; background:var(--gold); border-radius:50%; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; color:var(--capn-teal); margin-bottom:22px;">CAPN</div>
 
     <div class="login-tagline">
       Portail compétitif <span>CAPN</span>
@@ -39,7 +39,7 @@
       <div id="section-parent">
 
         <div id="login-error" class="alert alert-danger mb-16 hidden">
-          <span class="alert-icon">⚠️</span>
+          <span class="alert-icon" style="font-weight:bold;">!</span>
           <div id="login-error-msg">Identifiants invalides. Veuillez vérifier votre code et réessayer.</div>
         </div>
 
@@ -68,13 +68,23 @@
 
         <div class="divider mt-16">ou</div>
 
-        <div style="text-align:center; font-size:.8rem; color:var(--text-light);">
+        <div id="sso-error" class="alert alert-danger mb-16 hidden">
+          <span class="alert-icon" style="font-weight:bold;">!</span>
+          <div id="sso-error-msg"></div>
+        </div>
+
+        <button type="button" class="btn btn-google btn-full btn-lg" onclick="handleGoogleLogin(event)">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+          Connexion avec Google SSO
+        </button>
+
+        <div style="text-align:center; font-size:.8rem; color:var(--text-light); margin-top:20px;">
           Première connexion ? <a href="#" onclick="showModal('modal-activate')">Activer mon compte (CU-02) →</a>
         </div>
 
 
         <div class="alert alert-info mt-20">
-          <span class="alert-icon">💡</span>
+          <span class="alert-icon" style="font-weight:bold;">i</span>
           <div style="font-size:.76rem;">
             <strong>Prototype – accès direct :</strong><br/>
             <a href="dashboard-parent.html" style="color:var(--info);">→ Portail parent (Marie Tremblay)</a><br/>
@@ -122,13 +132,13 @@
     </div>
     <div class="modal-body">
       <div class="alert alert-info mb-16">
-        <span class="alert-icon">📧</span>
+        <span class="alert-icon" style="font-weight:bold;">i</span>
         <div>Vous devez avoir reçu un courriel d'invitation du CAPN contenant votre code d'activation unique (CU-14 : émis par l'admin/DG).</div>
       </div>
 
 
       <div id="activate-error" class="alert alert-danger mb-12 hidden">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon" style="font-weight:bold;">!</span>
         <div id="activate-error-msg">Code invalide.</div>
       </div>
 
@@ -215,8 +225,8 @@ function simulerErreurSSO() {
   document.getElementById('sso-error-msg').textContent = 'Connexion refusée par Google Workspace. Votre compte @clubcapn.com n\'est pas autorisé ou le service SSO est temporairement indisponible.';
 }
 
-async function handleGoogleLogin() {
-  const btn = event.currentTarget;
+async function handleGoogleLogin(e) {
+  const btn = e.currentTarget;
   setLoading(btn, true);
   await API.delay(900);
   setLoading(btn, false);

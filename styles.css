@@ -966,7 +966,7 @@ table.capn-table {
 .step.done::before {
   background: var(--success);
   color: #fff;
-  content: '✓';
+  content: 'v';
   border-color: var(--success);
 }
 

@@ -10,7 +10,9 @@ const CURRENT_USER = {
   initiales: 'MT',
   enfants: [
     { id: 'n001', prenom: 'Léa', nom: 'Tremblay', age: 14, groupe: 'Développement', inscrit: true },
-    { id: 'n002', prenom: 'Thomas', nom: 'Tremblay', age: 11, groupe: 'Recrues 2', inscrit: true }
+    { id: 'n002', prenom: 'Thomas', nom: 'Tremblay', age: 11, groupe: 'Recrues 2', inscrit: true },
+    { id: 'n003', prenom: 'Alice', nom: 'Tremblay', age: 16, groupe: 'Performance', inscrit: true },
+    { id: 'n004', prenom: 'Simon', nom: 'Tremblay', age: 9, groupe: 'Recrues 1', inscrit: true }
   ]
 };
 
@@ -38,7 +40,7 @@ const COMPETITIONS = [
     statut: 'ouvert',
     description: 'Compétition régionale ouverte aux groupes Recrues 2, Développement et Performance. Nataion 50m et 100m toutes nages.',
     groupes_eligible: ['Recrues 2', 'Développement', 'Performance'],
-    inscription_nageur: { n001: 'inscrit', n002: null }
+    inscription_nageur: { n001: 'inscrit', n002: null, n003: null, n004: null }
   },
   {
     id: 'comp02',
@@ -52,7 +54,7 @@ const COMPETITIONS = [
     statut: 'ouvert',
     description: 'Championnats provinciaux. Qualification requise via les temps standards. Groupes Développement et Performance seulement.',
     groupes_eligible: ['Développement', 'Performance'],
-    inscription_nageur: { n001: null, n002: null }
+    inscription_nageur: { n001: null, n002: null, n003: null, n004: null }
   },
   {
     id: 'comp03',
@@ -66,7 +68,7 @@ const COMPETITIONS = [
     statut: 'fermé',
     description: 'Compétition maison organisée par le CAPN. Tous les groupes d\'âge sont bienvenus.',
     groupes_eligible: ['Recrues 1', 'Recrues 2', 'Développement', 'Performance'],
-    inscription_nageur: { n001: 'inscrit', n002: 'inscrit' }
+    inscription_nageur: { n001: 'inscrit', n002: 'inscrit', n003: null, n004: null }
   }
 ];
 
@@ -148,7 +150,22 @@ const API = {
   async inscrireCompetition(compId, nageurId) {
     await this.delay(900);
     const comp = COMPETITIONS.find(c => c.id === compId);
-    if (comp) comp.inscription_nageur[nageurId] = 'inscrit';
+    if (!comp) return { success: false };
+    
+    comp.inscription_nageur[nageurId] = 'inscrit';
+    
+    const nageur = CURRENT_USER.enfants.find(n => n.id === nageurId);
+    FACTURES.unshift({
+      id: 'FAC-' + Math.floor(Math.random() * 9000 + 1000),
+      date: new Date().toISOString().split('T')[0],
+      echeance: comp.echeance_inscription,
+      nageur: nageur.prenom + ' ' + nageur.nom,
+      statut: 'impayée',
+      type: 'Compétition',
+      lignes: [{ desc: 'Frais d\'inscription – ' + comp.nom, qte: 1, prix: comp.cout }],
+      total: comp.cout
+    });
+
     return { success: true, confirmationId: 'CONF-' + Math.random().toString(36).slice(2, 8).toUpperCase() };
   },
 
@@ -204,7 +221,7 @@ function showToast(msg, type = 'success') {
     return c;
   })();
   const t = document.createElement('div');
-  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+  const icon = type === 'success' ? 'v' : type === 'error' ? 'x' : 'i';
   t.className = `toast ${type}`;
   t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
   container.appendChild(t);
@@ -214,7 +231,7 @@ function showToast(msg, type = 'success') {
 function setLoading(btn, loading) {
   if (loading) {
     btn.dataset.origText = btn.innerHTML;
-    btn.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">⟳</span> Chargement…';
+    btn.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">/</span> Chargement…';
     btn.disabled = true;
   } else {
     btn.innerHTML = btn.dataset.origText || btn.innerHTML;

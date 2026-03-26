@@ -10,16 +10,18 @@
 
 <nav class="navbar">
   <a href="dashboard-parent.html" class="navbar-brand">
-    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='CAPN'; this.style.fontSize='1.1rem'; this.style.fontWeight='800';" />
   </a>
   <ul class="navbar-nav">
-    <li><a href="dashboard-parent.html">🏠 Tableau de bord</a></li>
-    <li><a href="competitions.html" class="active">🏆 Compétitions</a></li>
-    <li><a href="facture.html">📄 Factures</a></li>
+    <li><a href="dashboard-parent.html">Tableau de bord</a></li>
+    <li><a href="competitions.html" class="active">Compétitions</a></li>
+    <li><a href="facture.html">Factures</a></li>
   </ul>
   <div class="navbar-user">
-    <span class="text-sm">Marie Tremblay</span>
-    <div class="avatar">MT</div>
+    <span class="badge badge-info" style="font-size:.7rem; margin-right:12px;">Portail Parent</span>
+    <span class="text-sm" style="margin-right:10px;">Marie Tremblay</span>
+    <div class="avatar" style="margin-right:15px;">MT</div>
+    <a href="index.html" class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.3);">Déconnexion</a>
   </div>
 </nav>
 
@@ -30,7 +32,7 @@
       <span class="breadcrumb-sep">›</span>
       <span>Compétitions</span>
     </div>
-    <h1>🏆 Compétitions</h1>
+    <h1>Compétitions</h1>
     <p>Inscrivez vos nageurs aux compétitions disponibles.</p>
   </div>
 </div>
@@ -70,7 +72,7 @@
 <div class="modal-overlay" id="modal-confirm">
   <div class="modal" style="max-width:460px;">
     <div class="modal-header">
-      <h3>✅ Inscription confirmée</h3>
+      <h3>Inscription confirmée</h3>
       <button class="modal-close" onclick="closeModal2()">✕</button>
     </div>
     <div class="modal-body" id="confirm-body"></div>
@@ -116,15 +118,15 @@ function renderComps(list) {
         </div>
         <div class="comp-date">${formatDate(c.date_debut)}${c.date_fin !== c.date_debut ? ' – ' + formatDate(c.date_fin) : ''}</div>
         <div class="comp-title">${c.nom}</div>
-        <div class="comp-location">📍 ${c.lieu}</div>
+        <div class="comp-location">${c.lieu}</div>
         <p class="text-sm text-muted mt-8" style="line-height:1.5;">${c.description}</p>
         <div class="comp-meta">
-          <div class="comp-meta-item">📅 Échéance: ${formatDate(c.echeance_inscription)}</div>
-          <div class="comp-meta-item">💰 ${formatMoney(c.cout)}/nageur</div>
+          <div class="comp-meta-item">Échéance: ${formatDate(c.echeance_inscription)}</div>
+          <div class="comp-meta-item">${formatMoney(c.cout)}/nageur</div>
         </div>
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-          ${leaOk  ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">✓ Léa inscrite</span>' : ''}
-          ${thomOk ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">✓ Thomas inscrit</span>' : ''}
+          ${leaOk  ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">v Léa inscrite</span>' : ''}
+          ${thomOk ? '<span style="font-size:.75rem; background:var(--success-bg); color:var(--success); padding:3px 10px; border-radius:20px;">v Thomas inscrit</span>' : ''}
         </div>
       </div>
       <div class="comp-card-footer">
@@ -156,7 +158,7 @@ function openInscription(compId) {
   body.innerHTML = `
     <div style="display:flex; flex-direction:column; gap:16px;">
       <div class="alert alert-info">
-        <span class="alert-icon">📅</span>
+        <span class="alert-icon" style="font-weight:bold;">i</span>
         <div>
           <strong>${selectedComp.nom}</strong><br/>
           ${formatDate(selectedComp.date_debut)} · ${selectedComp.lieu}<br/>
@@ -168,7 +170,7 @@ function openInscription(compId) {
         <label class="form-label">Sélectionner le(s) nageur(s) <span class="required">*</span></label>
         <div style="display:flex; flex-direction:column; gap:8px;" id="nageur-checkboxes">
           ${nageurs.length === 0
-            ? '<div class="alert alert-warning"><span class="alert-icon">⚠️</span><div>Aucun de vos nageurs n\'est éligible à cette compétition (groupe requis: ' + selectedComp.groupes_eligible.join(', ') + ').</div></div>'
+            ? '<div class="alert alert-warning"><span class="alert-icon"></span><div>Aucun de vos nageurs n\'est éligible à cette compétition (groupe requis: ' + selectedComp.groupes_eligible.join(', ') + ').</div></div>'
             : nageurs.map(n => {
                 const dejaInscrit = selectedComp.inscription_nageur[n.id] === 'inscrit';
                 return `
@@ -176,7 +178,7 @@ function openInscription(compId) {
                     <input type="checkbox" value="${n.id}" ${dejaInscrit ? 'checked disabled' : ''} onchange="updateNageurSelection(this)"/>
                     <div>
                       <div style="font-weight:600;">${n.prenom} ${n.nom}</div>
-                      <div class="text-xs text-muted">${n.age} ans · ${n.groupe} ${dejaInscrit ? '· <span style="color:var(--success)">✓ Déjà inscrit(e)</span>' : ''}</div>
+                      <div class="text-xs text-muted">${n.age} ans · ${n.groupe} ${dejaInscrit ? '· <span style="color:var(--success)">v Déjà inscrit(e)</span>' : ''}</div>
                     </div>
                     <div style="margin-left:auto; font-weight:700; color:var(--capn-teal);">${formatMoney(selectedComp.cout)}</div>
                   </label>`;
@@ -186,7 +188,7 @@ function openInscription(compId) {
       </div>
 
       <div class="alert alert-warning">
-        <span class="alert-icon">💳</span>
+        <span class="alert-icon" style="font-weight:bold;">!</span>
         <div>Une facture sera générée et envoyée à votre courriel. Le paiement devra être effectué avant l'échéance.</div>
       </div>
     </div>`;
@@ -216,17 +218,25 @@ async function confirmerInscription() {
   const body = document.getElementById('confirm-body');
   body.innerHTML = `
     <div style="display:flex; flex-direction:column; gap:12px;">
-      <div style="text-align:center; font-size:2.5rem; margin-bottom:4px;">🎉</div>
-      <p class="text-sm">Votre inscription à <strong>${selectedComp.nom}</strong> est bien enregistrée !</p>
+      <div style="text-align:center; font-size:2.5rem; margin-bottom:4px;"></div>
+      <p class="text-sm">Félicitations ! L'inscription à <strong>${selectedComp.nom}</strong> a été complétée avec succès.</p>
       ${results.map(r => `
-        <div style="background:var(--success-bg); padding:10px 14px; border-radius:8px; font-size:.85rem;">
+        <div style="background:var(--success-bg); border:1px solid var(--success); padding:10px 14px; border-radius:8px; font-size:.85rem;">
           <strong>${r.nageur.prenom} ${r.nageur.nom}</strong><br/>
-          Confirmation : <code>${r.confirmation}</code>
+          Numéro de confirmation : <code>${r.confirmation}</code>
         </div>`).join('')}
-      <div class="alert alert-info mt-8">
-        <span class="alert-icon">📧</span>
-        <div>Une confirmation a été envoyée par courriel. Votre nageur devra maintenant choisir ses épreuves.</div>
+      
+      <div class="alert alert-info" style="margin-top:8px;">
+        <span class="alert-icon"></span>
+        <div><strong>Facturation :</strong> Une facture de ${formatMoney(selectedComp.cout * results.length)} a été ajoutée à votre compte.</div>
       </div>
+
+      <div class="alert alert-warning" style="margin-top:4px;">
+        <span class="alert-icon"></span>
+        <div><strong>Étape suivante :</strong> Vos nageurs peuvent maintenant se connecter à leur portail pour <strong>choisir leurs épreuves</strong> (CU-06).</div>
+      </div>
+
+      <button class="btn btn-navy btn-sm" onclick="window.location='facture.html'" style="margin-top:10px;">Voir mes factures</button>
     </div>`;
   document.getElementById('modal-confirm').classList.add('open');
 }

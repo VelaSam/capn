@@ -11,15 +11,16 @@
 
 <nav class="navbar">
   <a href="#" class="navbar-brand">
-    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='CAPN'; this.style.fontSize='1.1rem'; this.style.fontWeight='800';" />
   </a>
   <ul class="navbar-nav">
-    <li><a href="epreuves.html" class="active">🏊 Mes épreuves</a></li>
+    <li><a href="epreuves.html" class="active">Mes épreuves</a></li>
   </ul>
   <div class="navbar-user">
-    <span class="badge badge-info" style="font-size:.7rem;">Nageur mineur</span>
+    <span class="badge badge-info" style="font-size:.7rem; margin-right:12px;">Portail Nageur</span>
     <div class="avatar" style="background:var(--aqua); color:#fff;">LT</div>
-    <span class="text-sm">Léa Tremblay</span>
+    <span class="text-sm" style="margin-right:15px;">Léa Tremblay</span>
+    <a href="index.html" class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.3);">Déconnexion</a>
   </div>
 </nav>
 
@@ -30,7 +31,7 @@
       <span class="breadcrumb-sep">›</span>
       <span>Choix des épreuves</span>
     </div>
-    <h1>🏊 Choisir mes épreuves</h1>
+    <h1>Choisir mes épreuves</h1>
     <p>Sélectionne tes épreuves pour chaque compétition. Ton entraîneur les validera par la suite.</p>
   </div>
 </div>
@@ -46,7 +47,7 @@
         <div class="text-sm text-muted">14 ans · Groupe Développement · Piscine Sophie-Barat</div>
       </div>
       <div class="alert alert-warning" style="margin-left:auto; flex:0 1 auto;">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon" style="font-weight:bold;">!</span>
         <div style="font-size:.8rem;">Maximum <strong>3 épreuves</strong> par compétition selon les règlements FINA-Québec.</div>
       </div>
     </div>
@@ -89,7 +90,7 @@
             <div id="recap-empty" class="text-sm text-muted" style="text-align:center; padding:12px 0;">Aucune épreuve sélectionnée.</div>
           </div>
           <div id="fenetre-alert" class="hidden" style="padding:10px 16px; background:var(--warning-bg); border-top:1px solid var(--border); font-size:.78rem; color:var(--warning); display:flex; gap:8px;">
-            <span>⚠️</span><span>Fenêtre de choix fermée — soumission désactivée (CU-06 flux alt. 2a.1).</span>
+            <span style="font-weight:bold;">!</span><span>Fenêtre de choix fermée — soumission désactivée (CU-06 flux alt. 2a.1).</span>
           </div>
           <div style="padding:14px 18px; border-top:1px solid var(--border);">
             <button class="btn btn-primary btn-full" id="btn-soumettre" onclick="soumettreEpreuves()" disabled>
@@ -104,7 +105,7 @@
 
 
   <div id="no-comp" class="hidden" style="text-align:center; padding:50px; color:var(--text-light);">
-    <div style="font-size:3rem; margin-bottom:12px;">🏊</div>
+    <div style="font-size:3rem; margin-bottom:12px;">#</div>
     <h3>Pas de compétition à venir</h3>
     <p class="text-sm mt-8">Tu n'as pas encore été inscrit(e) à une compétition par ton parent ou tuteur.</p>
   </div>
@@ -115,20 +116,27 @@
 <div class="modal-overlay" id="modal-soumis">
   <div class="modal" style="max-width:420px;">
     <div class="modal-header">
-      <h3>✅ Épreuves soumises!</h3>
+      <h3>Choix soumis avec succès !</h3>
       <button class="modal-close" onclick="document.getElementById('modal-soumis').classList.remove('open')">✕</button>
     </div>
     <div class="modal-body">
-      <div style="text-align:center; font-size:3rem; margin-bottom:12px;">🎉</div>
-      <p class="text-sm mb-16">Ton choix d'épreuves a été envoyé à ton entraîneur pour validation. Tu recevras une confirmation par courriel.</p>
-      <div id="confirmation-list"></div>
-      <div class="alert alert-info mt-16">
-        <span class="alert-icon">📧</span>
-        <div style="font-size:.82rem;">Ton entraîneur examinera tes choix et te confirmera lors de ton prochain entraînement.</div>
+      <div style="text-align:center; font-size:3rem; margin-bottom:12px;">#</div>
+      <p class="text-sm mb-16">Tes épreuves ont été enregistrées. Ton entraîneur recevra une notification pour valider tes choix.</p>
+      
+      <div id="confirmation-list" style="margin-bottom:15px;"></div>
+
+      <div class="alert alert-success">
+        <span class="alert-icon">v</span>
+        <div style="font-size:.82rem;"><strong>Action complétée :</strong> Vos choix respectent les limites de la compétition.</div>
+      </div>
+
+      <div class="alert alert-info mt-8">
+        <span class="alert-icon" style="font-weight:bold;">i</span>
+        <div style="font-size:.82rem;">Une notification de confirmation a été envoyée à tes parents.</div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary btn-full" onclick="document.getElementById('modal-soumis').classList.remove('open')">Fermer</button>
+      <button class="btn btn-navy btn-full" onclick="window.location='index.html'">Terminer la session</button>
     </div>
   </div>
 </div>
@@ -225,7 +233,7 @@ function buildEpreuveCard(ep, fenetreOuverte = true) {
         <div class="epreuve-title">${ep.nom}</div>
         <div class="epreuve-meta">${ep.categorie} · ${ep.distance}m · Mixte</div>
       </div>
-      <div class="epreuve-check">✓</div>
+      <div class="epreuve-check">v</div>
     </div>`;
 }
 

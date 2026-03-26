@@ -10,16 +10,18 @@
 
 <nav class="navbar">
   <a href="dashboard-parent.html" class="navbar-brand">
-    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='🐟'; this.style.fontSize='1.5rem';" />
+    <img src="image.png" alt="CAPN" class="navbar-logo" onerror="this.alt='CAPN'; this.style.fontSize='1.1rem'; this.style.fontWeight='800';" />
   </a>
   <ul class="navbar-nav">
-    <li><a href="dashboard-parent.html">🏠 Tableau de bord</a></li>
-    <li><a href="competitions.html">🏆 Compétitions</a></li>
-    <li><a href="facture.html" class="active">📄 Factures</a></li>
+    <li><a href="dashboard-parent.html">Tableau de bord</a></li>
+    <li><a href="competitions.html">Compétitions</a></li>
+    <li><a href="facture.html" class="active">Factures</a></li>
   </ul>
   <div class="navbar-user">
-    <span class="text-sm">Marie Tremblay</span>
-    <div class="avatar">MT</div>
+    <span class="badge badge-info" style="font-size:.7rem; margin-right:12px;">Portail Parent</span>
+    <span class="text-sm" style="margin-right:10px;">Marie Tremblay</span>
+    <div class="avatar" style="margin-right:15px;">MT</div>
+    <a href="index.html" class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.3);">Déconnexion</a>
   </div>
 </nav>
 
@@ -30,7 +32,7 @@
       <span class="breadcrumb-sep">›</span>
       <span>Factures</span>
     </div>
-    <h1>📄 Mes factures</h1>
+    <h1>Mes factures</h1>
     <p>Consultez vos transactions et factures liées aux compétitions.</p>
   </div>
 </div>
@@ -44,21 +46,21 @@
 
       <div class="grid-3" id="facture-stats">
         <div class="stat-card">
-          <div class="stat-icon gold">⏳</div>
+          <div class="stat-icon gold">...</div>
           <div>
             <div class="stat-label">À payer</div>
             <div class="stat-value" id="stat-unpaid">…</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon green">✅</div>
+          <div class="stat-icon green">[v]</div>
           <div>
             <div class="stat-label">Payées</div>
             <div class="stat-value" id="stat-paid">…</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon aqua">💰</div>
+          <div class="stat-icon aqua">$</div>
           <div>
             <div class="stat-label">Total en attente</div>
             <div class="stat-value" id="stat-total">…</div>
@@ -150,7 +152,7 @@ function renderFactures(list) {
       <td>${formatDate(f.date)}</td>
       <td style="${f.statut === 'impayée' && new Date(f.echeance) < new Date(Date.now() + 7*86400000) ? 'color:var(--danger); font-weight:600;' : ''}">${formatDate(f.echeance)}</td>
       <td style="font-weight:700;">${formatMoney(f.total)}</td>
-      <td><span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? '✓ Payée' : '⏳ À payer'}</span></td>
+      <td><span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? 'Payée' : 'À payer'}</span></td>
       <td>
         <div style="display:flex; gap:6px;">
           <button class="btn btn-ghost btn-sm" onclick="voirFacture('${f.id}')">Voir</button>
@@ -189,7 +191,7 @@ function voirFacture(id) {
       </div>
       <div style="display:flex; justify-content:space-between;">
         <span class="text-muted text-sm">Statut</span>
-        <span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? '✓ Payée' : '⏳ À payer'}</span>
+        <span class="badge ${f.statut === 'payée' ? 'badge-paid' : 'badge-unpaid'}">${f.statut === 'payée' ? 'Payée' : 'À payer'}</span>
       </div>
       <hr style="border:none; border-top:1px solid var(--border);" />
       ${f.lignes.map(l => `
@@ -203,8 +205,8 @@ function voirFacture(id) {
         <span style="color:var(--capn-teal);">${formatMoney(f.total)}</span>
       </div>
       ${f.statut === 'impayée' ? `
-        <div class="alert alert-info mt-8"><span class="alert-icon">⏳</span><div style="font-size:.8rem;">À payer avant l'échéance.</div></div>` 
-        : `<div class="alert alert-success mt-8"><span class="alert-icon">✅</span><div style="font-size:.8rem;">Cette facture a été payée.</div></div>`}
+        <div class="alert alert-info mt-8"><span class="alert-icon" style="font-weight:bold;">i</span><div style="font-size:.8rem;">À payer avant l'échéance.</div></div>` 
+        : `<div class="alert alert-success mt-8"><span class="alert-icon" style="font-weight:bold;">v</span><div style="font-size:.8rem;">Cette facture a été payée.</div></div>`}
     </div>`;
   document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
