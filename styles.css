@@ -1510,3 +1510,31 @@ table.capn-table {
     grid-template-columns: 1fr;
   }
 }
+
+/* Theme "Junior" pour le portail nageur mineur */
+body.junior-theme {
+  --capn-teal: #0284C7; /* Bleu ciel plus vif que le teal corporatif */
+  --gold: #7DD3FC;      /* Accent bleu clair au lieu du doré */
+  --aqua: #0EA5E9;
+  --bg-light: #F0F9FF;  /* Arrière-plan légèrement teinté bleu */
+}
+
+body.junior-theme .navbar {
+  box-shadow: 0 2px 8px rgba(2, 132, 199, .25);
+}
+
+body.junior-theme .page-header {
+  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
+  border-bottom: 4px solid var(--gold);
+}
+
+body.junior-theme .avatar {
+  background: var(--gold);
+  color: var(--capn-teal);
+}
+
+body.junior-theme .badge-info {
+  background: #E0F2FE;
+  color: #0369A1;
+  border-color: #BAE6FD;
+}
